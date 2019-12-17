@@ -1,1 +1,16 @@
-<img src="{% image_path %}" width="100">
+<p>video name: {{ video.video_name }}</p>
+<p>video class: {{ video.video_class }}</p>
+<p>total steps: {{ video.steps }}</p>
+<p></p>
+{% load static %}
+{% with 'images/data/'|add:first_img as first_static%}
+	<img src="{% static first_static %}">
+{% endwith %}
+
+{% if second_img %}
+{% with 'images/data/'|add:second_img as second_static%}
+	<img src="{% static second_static %}">
+{% endwith %}
+{% else %}
+<p>End of Video</p>
+{% endif %}
