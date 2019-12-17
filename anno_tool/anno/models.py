@@ -2,9 +2,10 @@ from django.db import models
 
 
 class Video(models.Model):
-    video_name = models.CharField(max_length=200)
+    video_name = models.CharField(max_length=200, default="")
+    video_class = models.CharField(max_length=200, default="")
     # cut points, seprated by comma. e.g. 1,3,5,10
-    cut_points = models.CharField(max_length=200)
+    cut_points = models.CharField(max_length=200, default="")
     """state of the video
     0: not annotated
     1: annotating
@@ -21,6 +22,9 @@ class Video(models.Model):
 
     # total steps
     steps = models.PositiveSmallIntegerField(default=0)
+
+    train = models.BooleanField(default=True)
+
 
     def __str__(self):
         return self.video_name
