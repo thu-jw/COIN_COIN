@@ -29,7 +29,7 @@ for key, info in tqdm(annotations['database'].items()):
         label = action['label']
         start_frame = int(fps * start) + 1
         stride = int((end - start) * fps // 16)
-        dst_path = os.path.join('data_with_name', key, f'{action_id}_{label}')
+        dst_path = os.path.join('data_with_name', key, f'{action_id:2d}_{label}')
         os.makedirs(dst_path, exist_ok=True)
         for i in range(16):
             frame_id = i * stride + start_frame
