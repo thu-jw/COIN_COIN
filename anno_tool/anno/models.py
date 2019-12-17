@@ -1,7 +1,7 @@
 from django.db import models
 
+
 class Video(models.Model):
-    # name of video
     video_name = models.CharField(max_length=200)
     # cut points, seprated by comma. e.g. 1,3,5,10
     cut_points = models.CharField(max_length=200)
@@ -19,6 +19,6 @@ class Video(models.Model):
 
     checkpoint = models.SmallIntegerField(default=0)
 
-    def __init__(self):
+    def __str__(self):
         return self.video_name
 # Create your models here.
