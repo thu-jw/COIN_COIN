@@ -15,9 +15,12 @@ class Video(models.Model):
         (1, 'ANNOTATING'),
         (2, 'FINISHED'),
     ]
-    state = models.SmallIntegerField(default=0, choices=STATE_CHOICES)
+    state = models.PositiveSmallIntegerField(default=0, choices=STATE_CHOICES)
 
-    checkpoint = models.SmallIntegerField(default=0)
+    checkpoint = models.PositiveSmallIntegerField(default=0)
+
+    # total steps
+    steps = models.PositiveSmallIntegerField(default=0)
 
     def __str__(self):
         return self.video_name

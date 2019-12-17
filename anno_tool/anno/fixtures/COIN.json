@@ -1,0 +1,14 @@
+[
+	{
+		"model": "anno.video", 
+		"pk": 2, 
+		"fields": 
+		{
+			"video_name": "test", 
+			"cut_points": "01", 
+			"state": 0, 
+			"checkpoint": 0, 
+			"steps": 0
+		}
+	}
+]
