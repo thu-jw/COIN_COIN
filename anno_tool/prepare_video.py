@@ -14,8 +14,9 @@ for i, (key, info) in tqdm(enumerate(annotations['database'].items())):
     fields['cut_points'] = ""
     fields['checkpoint'] = 0
     fields['steps'] = len(anno)
+    fields['action_ids'] = ','.join([a['id'] for a in anno])
 
-    fields['state'] = 2 if fields['steps'] <= 2 else 0
+    fields['state'] = 2 if fields['steps'] <= 3 else 0
     fields['train'] = info['subset'] == 'training'
 
     processed.append(

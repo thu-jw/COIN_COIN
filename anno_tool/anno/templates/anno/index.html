@@ -1,14 +1,46 @@
-<div align="center">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>COIN COIN annotation tool</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+<style>
+  .container-fluid {
+  left: 50%;
+  position: absolute;
+  top: 45%;
+  transform: translate(-50%, -55%);
+  text-align: center;
+  line-height: 100px;
+}
+  .btn-primary{
+	  margin-left: 10px;
+	  margin-right: 10px;
+  }
+</style>
+</head>
+
+<body>
+<div class="container-fluid bg-1 text-center">
 <h1>COIN COIN annotation tool</h1>
 
 <form action="{% url 'anno:start' %}" method="post">
 {% csrf_token %}
-<button type="submit" name="submit", value="continue">
+<button class="btn btn-primary" type="submit" name="submit", value="continue">
 	Continue
 </button>
-
-<button type="submit" name="submit", value="new">
+<button class="btn btn-primary" type="submit" name="submit", value="new">
 	Start new annotation
 </button>
 </form>
 </div>
+
+
+</body>
+</html>
+

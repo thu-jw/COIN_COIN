@@ -1,16 +1,152 @@
-<p>video name: {{ video.video_name }}</p>
-<p>video class: {{ video.video_class }}</p>
-<p>total steps: {{ video.steps }}</p>
-<p></p>
 {% load static %}
-{% with 'images/data/'|add:first_img as first_static%}
-	<img src="{% static first_static %}">
-{% endwith %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>COIN COIN annotation tool</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
-{% if second_img %}
-{% with 'images/data/'|add:second_img as second_static%}
-	<img src="{% static second_static %}">
-{% endwith %}
-{% else %}
-<p>End of Video</p>
-{% endif %}
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+<script>
+var init = function () {
+    //get scroll position in session storage
+
+    var list_group = $("#action_name_list");
+	var height = 0;
+	for (let i = 0; i < {{start_step}}; i++) {
+		let item = $("#action" + (i+1).toString());
+		height += item.outerHeight() - 1;
+	}
+	list_group.scrollTop(height - 200);
+};
+window.onload = init;
+</script>
+
+<style>
+
+.list-group{
+    max-height: 400px;
+    margin-bottom: 10px;
+    overflow:auto;
+	-webkit-overflow-scrolling: touch;
+}
+
+.list-group-item {
+	font-size: 12px;
+	display: list-item;
+	text-align: left;
+}
+
+.col-sm-3#action_names {
+	padding-left: 40px;
+	padding-right:40px;
+}
+
+.container-fluid {
+	padding-left: 30px;
+	padding-right: 30px;
+}
+
+
+.btn-primary {
+	width: 150px;
+	margin-left: 10px;
+	margin-right: 10px;
+}
+
+.row#images {
+	margin-top: 30px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container-fluid bg-1 text-center">
+	
+	<h2>COIN COIN Annotation </h2>
+	<hr/>
+	<div class="row" id="toprow">
+		<div class="col-sm-4">
+			<h3>video name<br/>
+			<small>{{ video.video_name }}</small>
+			</h3>
+		</div>
+		<div class="col-sm-4">
+			<h3>video class<br/>
+			<small>{{ video.video_class }}</small>
+			</h3>
+		</div>
+		<div class="col-sm-4">
+			<h3>total steps<br/>
+			<small>{{ video.steps }}</small>
+			</h3>
+		</div>
+	</div>
+
+	<hr/>
+
+	<div class="row">
+		<div class="col-sm-3" id="action_names">
+			<h4>Action names</h4>
+			<ol class="list-group" id="action_name_list">
+			{% for name in action_names %}
+				{% if start_step|add:1 == forloop.counter %}
+					<a id="action{{forloop.counter}}" class="list-group-item active" href="{% url 'anno:anno' video.id forloop.counter|add:"-1" %}">{{ forloop.counter }}. {{ name }}</a>
+				{% else %}
+				<a id="action{{forloop.counter}}" class="list-group-item" href="{% url 'anno:anno' video.id forloop.counter|add:"-1" %}">{{ forloop.counter }}. {{ name }}</a>
+				{% endif %}
+			{% endfor %}
+			</ol>
+		</div>
+		<div class="col-sm-9">
+			<form action="{% url 'anno:navigate' video.id %}" method="post">
+			{% csrf_token %}
+			{% if start_step >= 0 %}
+			<button class="btn btn-primary" type="submit" name="submit", value="previous">
+				Previous action
+			</button>
+			{% endif %}
+
+			{% if start_step|add:1 < video.steps %}
+			<button class="btn btn-primary" type="submit" name="submit", value="next">
+				Next action
+			</button>
+
+			<button class="btn btn-primary" type="submit" name="submit", value="cut">
+				Cut
+			</button>
+			{% endif %}
+			<button class="btn btn-primary" type="submit" name="submit", value="new">
+				Next Video
+			</button>
+			</form>
+
+			<div class="row" id="images">
+				{% if second_img %}
+				<div class="col-sm-6">
+				{% else %}
+				<div class="col-sm-12">
+				{% endif %}
+					<h5>{{ start_step|add:1}}: {{ first_name }}</h5>
+					{% with 'images/data/'|add:first_img as first_static%}
+						<img src="{% static first_static %}" class="img-responsive">
+					{% endwith %}
+				</div>
+				{% if second_img %}
+				<div class="col-sm-6" align="center">
+					<h5>{{ start_step|add:2}}: {{ second_name }}</h5>
+					{% with 'images/data/'|add:second_img as second_static%}
+						<img src="{% static second_static %}" class="img-responsive">
+					{% endwith %}
+				</div>
+				{% endif %}
+			</div>
+		</div>
+	</div>
+</div>
+</body>
+</html>
