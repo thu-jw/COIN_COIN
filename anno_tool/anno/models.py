@@ -25,6 +25,7 @@ class Video(models.Model):
 
     train = models.BooleanField(default=True)
 
+    step_ids = models.CharField(max_length=300, default="")
 
     def __str__(self):
         return self.video_name
