@@ -41,7 +41,7 @@ window.onload = init;
 
 <div class="container-fluid bg-1 text-center">
 	
-	<h2>COIN COIN Annotation </h2>
+	<h2 class="m-4">COIN COIN Annotation </h2>
 	<div class="progress m-3">
 		<div class="progress-bar" role="progressbar" style="width: {{ratio_finished}}%;" aria-valuemin="0" aria-valuemax="100">{{num_finished}} / {{num_videos}}</div>
 	</div>
@@ -90,7 +90,7 @@ window.onload = init;
 						Cut
 					</button>
 					<div class="btn-group">
-						<button type="button" class="btn btn-danger dropdown-toggle btn-edit" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						<button type="button" class="btn {{cut_points|yesno:"btn-danger,btn-secondary"}} dropdown-toggle btn-edit disable" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 							Delete
 						</button>
 						{% if cut_points %}
