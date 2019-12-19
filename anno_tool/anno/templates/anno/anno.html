@@ -32,6 +32,29 @@ var init = function () {
 	list_group.scrollTop(height - 200);
 };
 window.onload = init;
+
+$(window).keydown(function(e) {
+  switch (e.keyCode) {
+    case 67: // C
+		  $("#cut").click();
+		  break;
+	case 65: // A
+		  $("#na").click();
+		  break;
+	case 86: // V
+		  $("#nv").click();
+		  break;
+	case 83: // S
+		  $("#pa").click();
+		  break;
+	case 66: // B
+		  $("#pv").click();
+		  break
+	default:
+		  break;
+	return false;
+  }
+});
 </script>
 
 
@@ -86,7 +109,7 @@ window.onload = init;
 				<div class="col-sm-6">
 					<form action="{% url 'anno:edit' video.id %}" method="post">
 					{% csrf_token %}
-					<button class="btn btn-success btn-edit" type="submit" name="edit", value="cut">
+					<button class="btn btn-success btn-edit" type="submit" name="edit", value="cut" id="cut">
 						Cut
 					</button>
 					<div class="btn-group">
@@ -109,23 +132,23 @@ window.onload = init;
 			<hr/>
 			<form action="{% url 'anno:navigate' video.id %}" method="post">
 			{% csrf_token %}
-			<button class="btn btn-info btn-nav" type="submit" name="submit" value="pv">
-				Previous Video
+			<button class="btn btn-info btn-nav" type="submit" name="submit" value="pv" id="pv">
+				Previous video
 			</button>
 			{% if start_step >= 0 %}
-			<button class="btn btn-primary btn-nav" type="submit" name="submit" value="pa">
+			<button class="btn btn-primary btn-nav" type="submit" name="submit" value="pa" id="pa">
 				Previous action
 			</button>
 			{% endif %}
 
 			{% if start_step|add:1 < video.steps %}
-			<button class="btn btn-primary btn-nav" type="submit" name="submit" value="na">
+			<button class="btn btn-primary btn-nav" type="submit" name="submit" value="na" id="na">
 				Next action
 			</button>
 
 			{% endif %}
-			<button class="btn btn-info btn-nav" type="submit" name="submit" value="nv">
-				Next Video
+			<button class="btn btn-info btn-nav" type="submit" name="submit" value="nv" id="nv">
+				Next video
 			</button>
 			</form>
 
