@@ -18,6 +18,7 @@ for i, (key, info) in tqdm(enumerate(annotations['database'].items())):
 
     fields['state'] = 2 if fields['steps'] <= 3 else 0
     fields['train'] = info['subset'] == 'training'
+    fields['prev_vid'] = i if i > 0 else i + 1
 
     processed.append(
         OrderedDict([

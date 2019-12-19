@@ -27,6 +27,8 @@ class Video(models.Model):
 
     action_ids = models.CharField(max_length=300, default="")
 
+    prev_vid = models.PositiveIntegerField(default=0)
+
     def __str__(self):
         return self.video_name
 # Create your models here.
