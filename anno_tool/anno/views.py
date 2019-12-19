@@ -4,7 +4,7 @@ from django.urls import reverse
 from .models import Video
 import glob
 import os
-from .utils import load_action_dict
+from .utils import load_action_dict, parse_cuts
 
 action_dict = load_action_dict()
 last_video_id = None
@@ -48,6 +48,12 @@ def anno(request, video_id, start_step):
         action_names = [action_dict.get(int(i), '---missing name---') for i in action_ids]
         last_video_id = video_id
 
+    cut_points, clips = parse_cuts(video)
+
+    num_videos = len(Video.objects.all())
+    num_finished = len(Video.objects.filter(state=2))
+    ratio_finished = (num_finished * 100) // num_videos
+
     context = {
         "first_img": first_img,
         "first_name": action_names[start_step],
@@ -56,36 +62,62 @@ def anno(request, video_id, start_step):
         "video": video,
         "action_names": action_names,
         "start_step": start_step,
+        "clip_info": str(clips),
+        "cut_points": cut_points,
+        "num_videos": num_videos,
+        "num_finished": num_finished,
+        "ratio_finished": ratio_finished,
     }
     return render(request, 'anno/anno.html', context)
 
-def navigate(request, video_id):
-    # next action or next video or next cut
+def edit(request, video_id):
     video = get_object_or_404(Video, pk=video_id)
-    post = request.POST["submit"]
+    post = request.POST["edit"]
+    cuts = video.cut_points.split(',')
+    cuts = [int(cut) for cut in cuts if cut != '']
+
     if post == "cut":
-        cuts = video.cut_points.split(',')
-        if str(video.checkpoint) not in cuts:
-            cuts.append(str(video.checkpoint))
-        video.cut_points = ','.join(cuts)
-        video.checkpoint += 1
-        video.checkpoint = min(video.steps - 1, video.checkpoint)
+        if video.checkpoint not in cuts:
+            cuts.append(video.checkpoint)
+        cuts = sorted(cuts)
+        video.cut_points = ','.join([str(cut) for cut in cuts])
+
         video.state = 1 # annotating
         video.save()
         return HttpResponseRedirect('../{}/{}'.format(video_id, video.checkpoint))
+    else:
+        deleted_cut = int(post)
+        if deleted_cut == -1: # delete all
+            video.cut_points = ""
+        else:
+            cuts.remove(deleted_cut)
+            video.cut_points = ",".join(map(str, cuts))
+        video.save()
+        return HttpResponseRedirect('../{}/{}'.format(video_id, video.checkpoint))
 
-    elif post == "new":
+def navigate(request, video_id):
+    # navigate in actions and videos
+    video = get_object_or_404(Video, pk=video_id)
+    post = request.POST["submit"]
+
+    if post == "pv": # previous video
+        video = Video.objects.get(pk=video.prev_vid)
+        return HttpResponseRedirect('../{}/{}'.format(video.id, video.checkpoint))
+
+    elif post == "nv":# next video
         video.state = 2 # finished
         video.save()
         unfinished_videos = Video.objects.filter(state=0)
         try:
             video = unfinished_videos[0]
+            video.prev_vid = video_id
+            video.save()
             video_id = video.id
             start_step = video.checkpoint
         except:
             video_id = start_step = 0
         return HttpResponseRedirect('../{}/{}'.format(video_id, start_step))
-    elif post == "next":
+    elif post == "na": # next action
         # next action
         video.checkpoint += 1
         video.checkpoint = min(video.steps - 1, video.checkpoint)
@@ -93,7 +125,7 @@ def navigate(request, video_id):
         video.save()
         return HttpResponseRedirect('../{}/{}'.format(video_id, video.checkpoint))
 
-    elif post == "previous":
+    elif post == "pa": # previous action
         # next action
         video.checkpoint = max(0, video.checkpoint - 1)
         video.state = 1 # annotating

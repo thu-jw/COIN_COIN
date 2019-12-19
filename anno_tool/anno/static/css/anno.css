@@ -1,0 +1,52 @@
+.list-group{
+    max-height: 500px;
+    margin-bottom: 10px;
+    overflow:auto;
+	-webkit-overflow-scrolling: touch;
+}
+
+.list-group-item {
+	font-size: 12px;
+	display: list-item;
+	text-align: left;
+}
+
+.col-sm-3#action_names {
+	padding-left: 40px;
+	padding-right:40px;
+}
+
+.container-fluid {
+	padding-left: 30px;
+	padding-right: 30px;
+}
+
+
+.btn-nav {
+	width: 150px;
+	margin: 10px;
+}
+
+.btn-edit {
+	width: 100px;
+	margin: 10px;
+}
+
+.row#images {
+	margin-top: 30px;
+}
+
+.border-between > [class*='col-']:before {
+   background: #c3c3c3;
+   bottom: 0;
+   content: " ";
+   left: 0;
+   position: absolute;
+   width: 1px;
+   top: 0;
+}
+
+.border-between > [class*='col-']:first-child:before {
+   display: none;
+}
+

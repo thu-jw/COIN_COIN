@@ -6,9 +6,18 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+<!--jquery and popper-->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+
+<!--bootstrap css-->
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+<!--bootstrap js-->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+<link rel="stylesheet" href="{% static 'css/anno.css' %} ">
 
 <script>
 var init = function () {
@@ -25,42 +34,7 @@ var init = function () {
 window.onload = init;
 </script>
 
-<style>
 
-.list-group{
-    max-height: 400px;
-    margin-bottom: 10px;
-    overflow:auto;
-	-webkit-overflow-scrolling: touch;
-}
-
-.list-group-item {
-	font-size: 12px;
-	display: list-item;
-	text-align: left;
-}
-
-.col-sm-3#action_names {
-	padding-left: 40px;
-	padding-right:40px;
-}
-
-.container-fluid {
-	padding-left: 30px;
-	padding-right: 30px;
-}
-
-
-.btn-primary {
-	width: 150px;
-	margin-left: 10px;
-	margin-right: 10px;
-}
-
-.row#images {
-	margin-top: 30px;
-}
-</style>
 </head>
 
 <body>
@@ -68,22 +42,24 @@ window.onload = init;
 <div class="container-fluid bg-1 text-center">
 	
 	<h2>COIN COIN Annotation </h2>
-	<hr/>
+	<div class="progress m-3">
+		<div class="progress-bar" role="progressbar" style="width: {{ratio_finished}}%;" aria-valuemin="0" aria-valuemax="100">{{num_finished}} / {{num_videos}}</div>
+	</div>
 	<div class="row" id="toprow">
 		<div class="col-sm-4">
-			<h3>video name<br/>
+			<h4>video name<br/>
 			<small>{{ video.video_name }}</small>
-			</h3>
+			</h4>
 		</div>
 		<div class="col-sm-4">
-			<h3>video class<br/>
+			<h4>video class<br/>
 			<small>{{ video.video_class }}</small>
-			</h3>
+			</h4>
 		</div>
 		<div class="col-sm-4">
-			<h3>total steps<br/>
+			<h4>total steps<br/>
 			<small>{{ video.steps }}</small>
-			</h3>
+			</h4>
 		</div>
 	</div>
 
@@ -95,56 +71,89 @@ window.onload = init;
 			<ol class="list-group" id="action_name_list">
 			{% for name in action_names %}
 				{% if start_step|add:1 == forloop.counter %}
-					<a id="action{{forloop.counter}}" class="list-group-item active" href="{% url 'anno:anno' video.id forloop.counter|add:"-1" %}">{{ forloop.counter }}. {{ name }}</a>
+					<a id="action{{forloop.counter}}" class="list-group-item active" href="{% url 'anno:anno' video.id forloop.counter|add:"-1" %}">{{ forloop.counter|add:"-1" }}. {{ name }}</a>
 				{% else %}
-				<a id="action{{forloop.counter}}" class="list-group-item" href="{% url 'anno:anno' video.id forloop.counter|add:"-1" %}">{{ forloop.counter }}. {{ name }}</a>
+				<a id="action{{forloop.counter}}" class="list-group-item" href="{% url 'anno:anno' video.id forloop.counter|add:"-1" %}">{{ forloop.counter|add:"-1" }}. {{ name }}</a>
 				{% endif %}
 			{% endfor %}
 			</ol>
 		</div>
 		<div class="col-sm-9">
+			<div class="row">
+				<div class="col-sm-6">
+					<div style="margin:10px">{{clip_info}}</div>
+				</div>
+				<div class="col-sm-6">
+					<form action="{% url 'anno:edit' video.id %}" method="post">
+					{% csrf_token %}
+					<button class="btn btn-success btn-edit" type="submit" name="edit", value="cut">
+						Cut
+					</button>
+					<div class="btn-group">
+						<button type="button" class="btn btn-danger dropdown-toggle btn-edit" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+							Delete
+						</button>
+						{% if cut_points %}
+						<div class="dropdown-menu">
+							{% for point in cut_points %}
+								<button class="dropdown-item" href="#" name="edit" value="{{forloop.counter|add:"-1"}}">{{point}}</button>
+							{% endfor %}
+							<div class="dropdown-divider"></div>
+							<button class="dropdown-item" href="#" name="edit" value="-1">All</button>
+						</div>
+						{% endif %}
+					</div>
+					</form>
+				</div>
+			</div>
+			<hr/>
 			<form action="{% url 'anno:navigate' video.id %}" method="post">
 			{% csrf_token %}
+			<button class="btn btn-info btn-nav" type="submit" name="submit" value="pv">
+				Previous Video
+			</button>
 			{% if start_step >= 0 %}
-			<button class="btn btn-primary" type="submit" name="submit", value="previous">
+			<button class="btn btn-primary btn-nav" type="submit" name="submit" value="pa">
 				Previous action
 			</button>
 			{% endif %}
 
 			{% if start_step|add:1 < video.steps %}
-			<button class="btn btn-primary" type="submit" name="submit", value="next">
+			<button class="btn btn-primary btn-nav" type="submit" name="submit" value="na">
 				Next action
 			</button>
 
-			<button class="btn btn-primary" type="submit" name="submit", value="cut">
-				Cut
-			</button>
 			{% endif %}
-			<button class="btn btn-primary" type="submit" name="submit", value="new">
+			<button class="btn btn-info btn-nav" type="submit" name="submit" value="nv">
 				Next Video
 			</button>
 			</form>
 
+			{% if start_step in cut_points %}
+			<div class="row border-between" id="images">
+			{% else %}
 			<div class="row" id="images">
+			{% endif %}
 				{% if second_img %}
-				<div class="col-sm-6">
+				<div class="col-sm-6" align="center">
 				{% else %}
-				<div class="col-sm-12">
+				<div class="col-sm-12" align="center">
 				{% endif %}
-					<h5>{{ start_step|add:1}}: {{ first_name }}</h5>
 					{% with 'images/data/'|add:first_img as first_static%}
-						<img src="{% static first_static %}" class="img-responsive">
+						<img src="{% static first_static %}" class="img-fluid">
 					{% endwith %}
+					<h5 class="img-caption">{{ start_step}}: {{ first_name }}</h5>
 				</div>
 				{% if second_img %}
 				<div class="col-sm-6" align="center">
-					<h5>{{ start_step|add:2}}: {{ second_name }}</h5>
 					{% with 'images/data/'|add:second_img as second_static%}
-						<img src="{% static second_static %}" class="img-responsive">
+						<img src="{% static second_static %}" class="img-fluid">
 					{% endwith %}
+					<h5 class="img-caption">{{ start_step|add:"1"}}: {{ second_name }}</h5>
 				</div>
 				{% endif %}
 			</div>
+
 		</div>
 	</div>
 </div>
