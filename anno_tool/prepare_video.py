@@ -2,15 +2,29 @@
 import json
 from collections import OrderedDict
 from tqdm import tqdm
+import numpy as np
 
 annotations = json.load(open('../COIN.json', 'r'), object_pairs_hook=OrderedDict)
 
+classes = [
+    info['class']
+    for k, info in annotations['database'].items()
+]
+
+indices = np.argsort(classes)
+
+items = list(annotations['database'].items())
+
 processed = []
-for i, (key, info) in tqdm(enumerate(annotations['database'].items())):
+
+for i, index in enumerate(indices):
+    key, info = items[index]
     anno = info['annotation']
+
     fields = {}
     fields['video_name'] = key
     fields['video_class'] = info['class']
+    print(info['class'])
     fields['cut_points'] = ""
     fields['checkpoint'] = 0
     fields['steps'] = len(anno)
