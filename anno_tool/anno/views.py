@@ -90,7 +90,7 @@ def edit(request, video_id):
         if deleted_cut == -1: # delete all
             video.cut_points = ""
         else:
-            cuts.remove(deleted_cut)
+            cuts.pop(deleted_cut)
             video.cut_points = ",".join(map(str, cuts))
         video.save()
         return HttpResponseRedirect('../{}/{}'.format(video_id, video.checkpoint))
