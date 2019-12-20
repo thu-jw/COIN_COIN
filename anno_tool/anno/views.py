@@ -136,7 +136,8 @@ def start(request):
     # start new annotation
     unfinished_videos = Video.objects.filter(state=0)
     try:
-        if request.POST["submit"] == "continue":
+        post = request.POST.get("submit", "continue")
+        if post == "continue":
             annotating_videos = Video.objects.filter(state=1)
             if len(annotating_videos) > 0:
                 video_id = annotating_videos[0].id
@@ -149,5 +150,8 @@ def start(request):
         return HttpResponseRedirect('../{}/{}'.format(video_id, start_step))
     except IndexError:
         return HttpResponseRedirect('../0/0')
+
+def help(request):
+    return render(request, "anno/help.html")
 
 # Create your views here.
