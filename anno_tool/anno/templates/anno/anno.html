@@ -1,24 +1,12 @@
+{% extends "anno/base.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<title>COIN COIN annotation tool</title>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
 
-<!--jquery and popper-->
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+{% block title %}
+	COIN COIN Annotation Tool
+{% endblock %}
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-
-<!--bootstrap css-->
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-
-<!--bootstrap js-->
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-
+{% block misc %}
 <link rel="stylesheet" href="{% static 'css/anno.css' %} ">
-
 <script>
 var init = function () {
     //get scroll position in session storage
@@ -56,15 +44,16 @@ $(window).keydown(function(e) {
   }
 });
 </script>
+{% endblock %}
 
+{% block navtab %}
+	"anno"
+{% endblock %}
 
-</head>
-
-<body>
-
+{% block content %}
 <div class="container-fluid bg-1 text-center">
 	
-	<h2 class="m-4">COIN COIN Annotation </h2>
+	<h2 style="margin-top:100px">COIN COIN Annotation </h2>
 	<div class="progress m-3">
 		<div class="progress-bar" role="progressbar" style="width: {{ratio_finished}}%;" aria-valuemin="0" aria-valuemax="100">{{num_finished}} / {{num_videos}}</div>
 	</div>
@@ -180,5 +169,4 @@ $(window).keydown(function(e) {
 		</div>
 	</div>
 </div>
-</body>
-</html>
+{% endblock %}
