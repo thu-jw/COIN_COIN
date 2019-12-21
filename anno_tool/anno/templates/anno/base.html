@@ -17,6 +17,9 @@
 <!--bootstrap js-->
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 
+<!--fontawesome-->
+<script src="https://kit.fontawesome.com/5fcc70e993.js" crossorigin="anonymous"></script>
+
 {% block misc %}
 {% endblock %}
 
@@ -27,6 +30,26 @@ $(document).ready(function() {
 	$("#" + id).addClass('active');
 })
 </script>
+
+<style>
+.fa {
+color: #eeeeee;
+margin-right: 10px;
+font-size:18px;
+width:2.25rem;
+}
+
+footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  background: #222;
+  color: #eee;
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+</style>
 
 </head>
 
@@ -44,7 +67,7 @@ $(document).ready(function() {
 		  <a class="nav-link" href="{% url "index" %}" id="home">Home <span class="sr-only">(current)</span></a>
       </li>
       <li class="nav-item">
-		  <a class="nav-link" href="../admin" id="admin">Admin</a>
+		  <a class="nav-link" href="/admin" id="admin">Admin</a>
       </li>
       <li class="nav-item">
 		  <a class="nav-link" href="{% url "anno:start" %}" id="anno">Annotate</a>
@@ -58,5 +81,27 @@ $(document).ready(function() {
 
 {% block content %}
 {% endblock %}
+
+<!-- Footer -->
+<!--<footer class="footer font-small pt-4">-->
+
+	<!--[> Footer Links <]-->
+	<!--<div class="container-fluid text-center">-->
+		<!--<div class="row">-->
+			<!--<div class="col-sm-4">-->
+					<!--<i class="fa fa-phone-alt" aria-hidden="true"></i><a href="tel:13051108800">13051108800</a>-->
+			<!--</div>-->
+			<!--<div class="col-sm-4">-->
+				<!--Copyright &copy; 2019 <a href="http://ivg.au.tsinghua.edu.cn" target="_blank" style="margin-left: 10px">Tsinghua i-VisionGroup</a>-->
+			<!--</div>-->
+			<!--<div class="col-sm-4">-->
+					<!--<i class="fa fa-envelope-square" aria-hidden="true"></i><a href="mailto:zhaowl16@mails.tsinghua.edu.cn?subject=Email Subject line">Email Us</a>-->
+			<!--</div>-->
+		<!--</div>-->
+	<!--</div>-->
+	<!--</div>-->
+	<!--[> Copyright <]-->
+  <!--[> Copyright <]-->
+<!--</footer>-->
 </body>
 </html>

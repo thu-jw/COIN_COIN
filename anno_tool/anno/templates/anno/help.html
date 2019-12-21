@@ -1,17 +1,16 @@
 {% extends "anno/base.html" %}
+{% load static %}
 {% block title %}
 COIN COIN annotation tool
 {% endblock %}
 
 {% block misc %}
 <style>
-  .container-fluid {
-  left: 50%;
-  position: absolute;
-  top: 50%;
-  transform: translate(-50%, -55%);
-  text-align: center;
-  line-height: 150px;
+  .container-fluid#main {
+  margin-top: 10%;
+  padding-left:20%;
+  padding-right:20%;
+  line-height: 30px;
 }
 </style>
 {% endblock %}
@@ -22,13 +21,74 @@ COIN COIN annotation tool
 
 {% block content %}
 
-<div class="container-fluid bg-1 text-center">
-<h1>COIN COIN annotation tool</h1>
+<div class="container-fluid bg-1 text-center" id="main">
 
-<h2> COIN 数据集</h2>
-<h2> 标注规则 </h2>
-<h2> 标注界面</h2>
-<h2> 快捷键 </h2>
+<h2 class="m-4"> COIN 数据集</h2>
+
+<cite>
+<p class="text-justify"> 
+The <a target="_blank" href="https://coin-dataset.github.io">COIN dataset</a> consists of 11,827 videos related to 180 different tasks, which were all collected from YouTube. The average length of a video is 2.36 minutes. Each video is labelled with 3.91 step segments, where each segment lasts 14.91 seconds on average. In total, the dataset contains videos of 476 hours, with 46,354 annotated segments.
+</p>
+</cite>
+<h2 class="m-4"> 标注规则 </h2>
+<p class="text-justify">
+为了表述方便，我们首先明确以下几点：
+<ul class="text-left">
+	<li>一个视频中可能包含许多次<b>任务</b>。例如一个换轮胎的视频可能换了四次轮胎，这里每换一次轮胎称为完成一次<b>任务</b></li>
+	<li>每个任务由一系列<b>动作</b>构成。例如换轮胎的任务包括松螺丝、卸下旧轮胎、安装新轮胎、拧螺丝等动作。</li>
+</ul>
+</p>
+
+<p class="text-justify">
+原始的COIN数据集中标注了每个动作所在的时间区间，但是在一个视频中，同一个任务可能会重复了很多遍。我们希望将同一个视频中的多次任务分隔开。
+</p>
+
+<h2 class="m-4"> 标注方法</h2>
+<p class="text-justify">
+可以通过点击导航栏的<i>Annotate</i>进入标注界面，也可以在<i>Home</i>下选择<i>Continue</i>来继续标注或<i>Start new</i>开启新标注。标注界面如下：
+</p>
+
+<div>
+<img src="{% static "images/tutorial.png" %}" alt="" class="img-fluid"/>
+</div>
+
+<p class="text-justify">
+其中各个区域功能如下：
+<ol class="text-left">
+	<li> 显示所有动作，当前动作用高亮标出。</li>
+	<li> 编辑切分点。左侧的列表为当前的所有片段，采用闭区间的表示方法。例如[[0, 3], [4, 7]]表示第0-3个动作为第一个任务，第4-7个动作为第二个任务。点击<i>Cut</i>按钮后，则在当前动作之后新建一个切分点。点击<i>Delete</i>下拉菜单可以选择删除某一个切分点或删除所有切分点。</li>
+	<li> 切换动作或视频。<b>注意：</b> 点击<i>Next video</i>之后则认为当前视频已经标注结束。如果误操作，点击<i>Previous video</i>可以回退继续标注。</li>
+	<li> 显示当前动作的最后一帧和下一个动作的第一帧，用来判断是否进行了新任务。如果当前动作存在切分，则两张图片之间会有灰色分割线。</li>
+</ol>
+</p>
+
+<p class="text-justify">
+动作步数小于等于3步的默认只有一个任务，无需标注。所有的视频已经按照任务种类排序。建议的标注方法如下：
+<ul class="text-left">
+	<li> 通过图片和动作信息，了解这个任务的大概步骤，尤其是任务的开始、结束的标志性动作。例如换轮胎任务的结尾一般是“换上新轮胎”和“拧紧螺丝”这两个动作</li>
+	<li> 开始标注时，首先浏览左侧的所有动作信息，如果很明显只做了一次任务，就可以跳过该视频。</li>
+	<li>如果发现可能做了很多次任务，可以根据动作的特点在左侧的动作信息里面找到开始、结束的标志性动作，点击任务的结束动作，添加切分点。</li>
+	<li>如果不确定，可以通过图片信息辅助判断。</li>
+</ul>
+</p>
+
+
+<h2 class="m-4"> 快捷键 </h2>
+<p class="text-justify">
+可以使用键盘快捷键加速标注：
+<table class="table">
+	<thead>
+	<tr><th>键盘</th><th>操作</th></tr>
+	</thead>
+	<tbody>
+	<tr><td>a</td><td>Next action</td></tr>
+	<tr><td>s</td><td>Previous action</td></tr>
+	<tr><td>v</td><td>Next video</td></tr>
+	<tr><td>b</td><td>Prevous video</td></tr>
+	<tr><td>c</td><td>Cut</td></tr>
+	</tbody>
+</table>
+</p>
 </div>
 {% endblock %}
 

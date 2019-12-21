@@ -6,12 +6,8 @@ COIN COIN annotation tool
 
 {% block misc %}
 <style>
-  .container-fluid {
-  left: 50%;
-  position: absolute;
-  top: 50%;
-  transform: translate(-50%, -55%);
-  text-align: center;
+  .container-fluid#main {
+  margin-top: 23%;
   line-height: 150px;
 }
   .btn-primary{
@@ -27,7 +23,7 @@ COIN COIN annotation tool
 
 {% block content %}
 
-<div class="container-fluid bg-1 text-center">
+<div class="container-fluid bg-1 text-center" id="main">
 <h1>COIN COIN annotation tool</h1>
 
 <form action="{% url 'anno:start' %}" method="post">

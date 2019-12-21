@@ -16,11 +16,14 @@
 	padding-right:40px;
 }
 
-.container-fluid {
+.container-fluid#main {
 	padding-left: 30px;
 	padding-right: 30px;
 }
 
+.row#toprow {
+	margin-top: 80px;
+}
 
 .btn-nav {
 	width: 150px;
