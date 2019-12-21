@@ -38,12 +38,53 @@ $(window).keydown(function(e) {
 	case 66: // B
 		  $("#pv").click();
 		  break
+	case 37: // left arrow
+		  document.getElementById('prev_vid').click();
+		  break;
+	case 39: // right arrow
+		  document.getElementById('next_vid').click();
+		  break;
+	case 13: // enter
+		  var new_vid = $("#vid").val();
+		  if ("{{video.id}}" != new_vid)
+			  window.location.replace("/anno/" + $("#vid").val() + "/99");
+		  break
 	default:
 		  break;
 	return false;
   }
 });
+
 </script>
+
+<style type="text/css" media="screen">
+#vid {
+	width: 80px;
+	text-align: center;
+}
+
+.fa-arrows {
+	color: #aaa;
+	height: 100%;
+	width: 1rem;
+}
+
+.fa-arrows:hover {
+	color: #222;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance:textfield;
+}
+
+</style>
 {% endblock %}
 
 {% block navtab %}
@@ -54,19 +95,34 @@ $(window).keydown(function(e) {
 <div class="container-fluid bg-1 text-center" id="main">
 	
 	<div class="row" id="toprow">
-		<div class="col-sm-4">
+		<div class="col-sm-3">
+			<h4>video id<br/>
+					<div class="vid-group">
+						<a href="{% url 'anno:anno' video.id|add:"-1" 99 %}" id="prev_vid">
+						<i class="fa fa-caret-left fa-arrows" aria-hidden="true"></i>
+						</a>
+				<small>
+					<input type="number" value="{{video.id}}" name="" id="vid" min="1" max="{{ num_videos }}"/>
+				</small>
+						<a href="{% url 'anno:anno' video.id|add:"1" 99 %}" id="next_vid">
+						<i class="fa fa-caret-right fa-arrows" aria-hidden="true"></i>
+						</a>
+					</div>
+			</h4>
+		</div>
+		<div class="col-sm-3">
 			<h4>video name<br/>
 			<small>{{ video.video_name }}</small>
 			</h4>
 		</div>
-		<div class="col-sm-4">
+		<div class="col-sm-3">
 			<h4>video class<br/>
 			<small>{{ video.video_class }}</small>
 			</h4>
 		</div>
-		<div class="col-sm-4">
-			<h4>total steps<br/>
-			<small>{{ video.steps }}</small>
+		<div class="col-sm-3">
+			<h4>video state<br/>
+			<small>{{ state }}</small>
 			</h4>
 		</div>
 	</div>
@@ -77,7 +133,9 @@ $(window).keydown(function(e) {
 
 	<div class="row">
 		<div class="col-sm-3" id="action_names">
-			<h4>Action names</h4>
+			<h4>Action names<br/>
+				<small>total steps: {{video.steps}}</small>
+			</h4>
 			<ol class="list-group" id="action_name_list">
 			{% for name in action_names %}
 				{% if start_step|add:1 == forloop.counter %}

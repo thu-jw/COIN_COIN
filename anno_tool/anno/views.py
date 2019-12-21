@@ -4,6 +4,7 @@ from django.urls import reverse
 from .models import Video
 import glob
 import os
+import numpy as np
 from .utils import load_action_dict, parse_cuts
 
 action_dict = load_action_dict()
@@ -15,10 +16,15 @@ def index(request):
 
 
 def anno(request, video_id, start_step):
-    if video_id == 0:
+    if video_id == -1:
         return HttpResponse("Congratulations! We have finished!")
 
+
+    video_id = np.clip(video_id, 1, Video.objects.count())
     video = Video.objects.get(id=video_id)
+
+    if start_step == 99:
+        start_step = video.checkpoint
 
     start_step = min(video.steps - 1, start_step)
     video.checkpoint = start_step
@@ -60,6 +66,7 @@ def anno(request, video_id, start_step):
         "second_name": action_names[start_step + 1] if second_img is not None else None,
         "second_img": second_img,
         "video": video,
+        "state": Video.STATE_CHOICES[video.state][1],
         "action_names": action_names,
         "start_step": start_step,
         "clip_info": str(clips),
@@ -149,7 +156,7 @@ def start(request):
         start_step = video.checkpoint
         return HttpResponseRedirect('../{}/{}'.format(video_id, start_step))
     except IndexError:
-        return HttpResponseRedirect('../0/0')
+        return HttpResponseRedirect('../-1/0')
 
 def help(request):
     return render(request, "anno/help.html")

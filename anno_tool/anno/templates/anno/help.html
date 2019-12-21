@@ -12,6 +12,11 @@ COIN COIN annotation tool
   padding-right:20%;
   line-height: 30px;
 }
+
+.light{
+    -webkit-text-stroke: 1.5px white;
+}
+
 </style>
 {% endblock %}
 
@@ -84,7 +89,9 @@ The <a target="_blank" href="https://coin-dataset.github.io">COIN dataset</a> co
 	<tr><td>a</td><td>Next action</td></tr>
 	<tr><td>s</td><td>Previous action</td></tr>
 	<tr><td>v</td><td>Next video</td></tr>
-	<tr><td>b</td><td>Prevous video</td></tr>
+	<tr><td>b</td><td>Previous video</td></tr>
+	<tr><td><i class="fa fa-arrow-left light" aria-hidden="true"></i></td><td>Previous video (By ID)</td></tr>
+	<tr><td><i class="fa fa-arrow-right light" aria-hidden="true"></i></td><td>Next video (By ID)</td></tr>
 	<tr><td>c</td><td>Cut</td></tr>
 	</tbody>
 </table>
