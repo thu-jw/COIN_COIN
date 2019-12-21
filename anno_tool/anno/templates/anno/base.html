@@ -19,6 +19,7 @@
 
 <!--fontawesome-->
 <script src="https://kit.fontawesome.com/5fcc70e993.js" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
 {% block misc %}
 {% endblock %}
@@ -37,6 +38,14 @@ color: #eeeeee;
 margin-right: 10px;
 font-size:18px;
 width:2.25rem;
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+body {
+  margin-bottom: 100px; /* Margin bottom by footer height */
 }
 
 footer {
@@ -83,25 +92,21 @@ footer {
 {% endblock %}
 
 <!-- Footer -->
-<!--<footer class="footer font-small pt-4">-->
+<footer class="footer font-small pt-4">
 
-	<!--[> Footer Links <]-->
-	<!--<div class="container-fluid text-center">-->
-		<!--<div class="row">-->
-			<!--<div class="col-sm-4">-->
-					<!--<i class="fa fa-phone-alt" aria-hidden="true"></i><a href="tel:13051108800">13051108800</a>-->
-			<!--</div>-->
-			<!--<div class="col-sm-4">-->
-				<!--Copyright &copy; 2019 <a href="http://ivg.au.tsinghua.edu.cn" target="_blank" style="margin-left: 10px">Tsinghua i-VisionGroup</a>-->
-			<!--</div>-->
-			<!--<div class="col-sm-4">-->
-					<!--<i class="fa fa-envelope-square" aria-hidden="true"></i><a href="mailto:zhaowl16@mails.tsinghua.edu.cn?subject=Email Subject line">Email Us</a>-->
-			<!--</div>-->
-		<!--</div>-->
-	<!--</div>-->
-	<!--</div>-->
-	<!--[> Copyright <]-->
-  <!--[> Copyright <]-->
-<!--</footer>-->
+	<div class="container-fluid text-center">
+		<div class="row">
+			<div class="col-sm-4">
+					<i class="fa fa-phone" aria-hidden="true"></i><a href="tel:13051108800">13051108800</a>
+			</div>
+			<div class="col-sm-4">
+				Copyright &copy; 2019 <a href="http://ivg.au.tsinghua.edu.cn" target="_blank" style="margin-left: 10px">Tsinghua i-VisionGroup</a>
+			</div>
+			<div class="col-sm-4">
+					<i class="fa fa-envelope-square" aria-hidden="true"></i><a href="mailto:zhaowl16@mails.tsinghua.edu.cn?subject=Email Subject line">Email Us</a>
+			</div>
+		</div>
+	</div>
+</footer>
 </body>
 </html>
