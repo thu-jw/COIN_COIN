@@ -25,6 +25,7 @@ def anno(request, video_id, start_step):
 
     if start_step == 99:
         start_step = video.checkpoint
+        return HttpResponseRedirect('../{}/{}'.format(video_id, video.checkpoint))
 
     start_step = min(video.steps - 1, start_step)
     video.checkpoint = start_step
