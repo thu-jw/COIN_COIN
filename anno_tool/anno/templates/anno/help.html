@@ -48,6 +48,27 @@ The <a target="_blank" href="https://coin-dataset.github.io">COIN dataset</a> co
 原始的COIN数据集中标注了每个动作所在的时间区间，但是在一个视频中，同一个任务可能会重复了很多遍。我们希望将同一个视频中的多次任务分隔开。
 </p>
 
+<p class="text-justify">
+标注过程中可能会出现以下几种情况（用字母表示动作）：
+<table class="table">
+	<col width="40%">
+	<col width="60%">
+	<thead align="left">
+		<tr>
+			<th>动作形式</th><th>标注</th>
+		</tr>
+	</thead>
+	<tbody align="left">
+		<tr>
+			<td>A-BC-BC-BC-D</td><td>虽然动作重复，但是有起始动作和结束动作，可知整体应该作为一个任务，<b>不切分</b></td>
+		</tr>
+		<tr>
+			<td>BC-BC-BC</td><td>如果任务之间不具有连续性（比如说体育比赛中不同选手的动作、制作工艺品做了很多个）则<b>切分</b>；如果具有连续性（比如砌瓷砖，贴墙纸等，虽然重复但是前后是有联系的），则<b>不切分</b>。</td>
+		</tr>
+	</tbody>
+</table>
+</p>
+
 <h2 class="m-4"> 标注方法</h2>
 <p class="text-justify">
 可以通过点击导航栏的<i>Annotate</i>进入标注界面，也可以在<i>Home</i>下选择<i>Continue</i>来继续标注或<i>Start new</i>开启新标注。标注界面如下：
