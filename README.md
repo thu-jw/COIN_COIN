@@ -13,17 +13,17 @@ Ensure there is only one task in each clip.
 ## Files
 - COIN.json: original annotation of COIN
 - COIN_COIN.json: annotation of COIN_COIN, the format is (only useful keys are listed): 
-```json
+```python
 [
   {
-    "pk": 1, //primary key
+    "pk": 1, # primary key
     "fields": {
       "video_name": "4MiubN1oQkg",
       "video_class": "ArcWeld",
       "cut_points": "",
-      "state": 2, //2 for finished
+      "state": 2, # 2 for finished
       "steps": 3,
-      "train": false, //belongs to the train/val set
+      "train": false, # belongs to the train/val set
       "action_ids": "587,585,587",
     }
   },
