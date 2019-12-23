@@ -99,13 +99,13 @@ input[type=number] {
 			<h4>video id<br/>
 					<div class="vid-group">
 						<a href="{% url 'anno:anno' video.id|add:"-1" 99 %}" id="prev_vid">
-							<i class="fas fa-caret-left fa-arrows"></i>
+							<span class="fas fa-caret-left fa-arrows"></span>
 						</a>
 				<small>
 					<input type="number" value="{{video.id}}" name="" id="vid" min="1" max="{{ num_videos }}"/>
 				</small>
 						<a href="{% url 'anno:anno' video.id|add:"1" 99 %}" id="next_vid">
-							<i class="fas fa-caret-right fa-arrows"></i>
+							<span class="fas fa-caret-right fa-arrows"></span>
 						</a>
 					</div>
 			</h4>
