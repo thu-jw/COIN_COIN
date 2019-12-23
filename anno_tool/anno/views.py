@@ -85,13 +85,14 @@ def edit(request, video_id):
     cuts = [int(cut) for cut in cuts if cut != '']
 
     if post == "cut":
-        if video.checkpoint not in cuts:
-            cuts.append(video.checkpoint)
-        cuts = sorted(cuts)
-        video.cut_points = ','.join([str(cut) for cut in cuts])
+        if video.checkpoint != video.steps - 1:
+            if video.checkpoint not in cuts:
+                cuts.append(video.checkpoint)
+            cuts = sorted(cuts)
+            video.cut_points = ','.join([str(cut) for cut in cuts])
 
-        video.state = 1 # annotating
-        video.save()
+            video.state = 1 # annotating
+            video.save()
         return HttpResponseRedirect('../{}/{}'.format(video_id, video.checkpoint))
     else:
         deleted_cut = int(post)
