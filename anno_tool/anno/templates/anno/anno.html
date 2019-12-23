@@ -84,7 +84,20 @@ input[type=number] {
   -moz-appearance:textfield;
 }
 
+/* Bootstrap Toggle v2.2.2 corrections for Bootsrtap 4*/
+.toggle-off {
+    box-shadow: inset 0 3px 5px rgba(0, 0, 0, .125);
+}
+.toggle.off {
+    border-color: rgba(0, 0, 0, .25);
+}
+
+.toggle-handle {
+    background-color: white;
+    border: thin rgba(0, 0, 0, .25) solid;
+}
 </style>
+
 {% endblock %}
 
 {% block navtab %}
@@ -171,6 +184,7 @@ input[type=number] {
 						</div>
 						{% endif %}
 					</div>
+					<input type="checkbox" {% if video.certainty %} checked {% endif %} data-toggle="toggle" data-on="Certain" data-off="Uncertain" name="certain" value="1" onchange="this.form.submit()">
 					</form>
 				</div>
 			</div>

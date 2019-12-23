@@ -80,27 +80,33 @@ def anno(request, video_id, start_step):
 
 def edit(request, video_id):
     video = get_object_or_404(Video, pk=video_id)
-    post = request.POST["edit"]
-    cuts = video.cut_points.split(',')
-    cuts = [int(cut) for cut in cuts if cut != '']
+    print(request.POST.keys())
+    if "edit" in request.POST:
+        post = request.POST["edit"]
+        cuts = video.cut_points.split(',')
+        cuts = [int(cut) for cut in cuts if cut != '']
 
-    if post == "cut":
-        if video.checkpoint != video.steps - 1:
-            if video.checkpoint not in cuts:
-                cuts.append(video.checkpoint)
-            cuts = sorted(cuts)
-            video.cut_points = ','.join([str(cut) for cut in cuts])
+        if post == "cut":
+            if video.checkpoint != video.steps - 1:
+                if video.checkpoint not in cuts:
+                    cuts.append(video.checkpoint)
+                cuts = sorted(cuts)
+                video.cut_points = ','.join([str(cut) for cut in cuts])
 
-            video.state = 1 # annotating
-            video.save()
-        return HttpResponseRedirect('../{}/{}'.format(video_id, video.checkpoint))
-    else:
-        deleted_cut = int(post)
-        if deleted_cut == -1: # delete all
-            video.cut_points = ""
+                video.state = 1 # annotating
+                video.save()
+            return HttpResponseRedirect('../{}/{}'.format(video_id, video.checkpoint))
         else:
-            cuts.pop(deleted_cut)
-            video.cut_points = ",".join(map(str, cuts))
+            deleted_cut = int(post)
+            if deleted_cut == -1: # delete all
+                video.cut_points = ""
+            else:
+                cuts.pop(deleted_cut)
+                video.cut_points = ",".join(map(str, cuts))
+            video.save()
+            return HttpResponseRedirect('../{}/{}'.format(video_id, video.checkpoint))
+    else:
+        video.certainty = not video.certainty
         video.save()
         return HttpResponseRedirect('../{}/{}'.format(video_id, video.checkpoint))
 
