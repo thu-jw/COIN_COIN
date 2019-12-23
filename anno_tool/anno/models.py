@@ -17,6 +17,7 @@ class Video(models.Model):
         (2, 'FINISHED'),
     ]
     state = models.PositiveSmallIntegerField(default=0, choices=STATE_CHOICES)
+    certainty = models.BooleanField(default=True)
 
     checkpoint = models.PositiveSmallIntegerField(default=0)
 
