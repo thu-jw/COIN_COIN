@@ -27,22 +27,22 @@ def anno(request, video_id, start_step):
         start_step = video.checkpoint
         return HttpResponseRedirect('../{}/{}'.format(video_id, video.checkpoint))
 
-    start_step = min(video.steps - 1, start_step)
+    start_step = np.clip(start_step, 0, video.steps - 1)
     video.checkpoint = start_step
     video.save()
 
-    first_img = glob.glob('/opt/data5/COIN_COIN/{}/{}/img*.jpg'.format(
+    first_img = sorted(glob.glob('/opt/data5/COIN_COIN/{}/{}/img*.jpg'.format(
         video.video_name,
         start_step
-    ))[-1]
+    )))[-1]
 
     first_img = '/'.join(first_img.split('/')[-3:])
 
     if start_step < video.steps - 1:
-        second_img = glob.glob('/opt/data5/COIN_COIN/{}/{}/img*.jpg'.format(
+        second_img = sorted(glob.glob('/opt/data5/COIN_COIN/{}/{}/img*.jpg'.format(
             video.video_name,
             start_step + 1
-        ))[0]
+        )))[0]
         second_img = '/'.join(second_img.split('/')[-3:])
     else:
         second_img = None
