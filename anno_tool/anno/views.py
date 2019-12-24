@@ -147,22 +147,29 @@ def navigate(request, video_id):
         video.save()
         return HttpResponseRedirect('../{}/{}'.format(video_id, video.checkpoint))
 
+def resume(request):
+    unfinished_videos = Video.objects.filter(state=0)
+    annotating_videos = Video.objects.filter(state=1)
+    try:
+        if len(annotating_videos) > 0:
+            video = annotating_videos[0]
+        else:
+            video = unfinished_videos[0]
+        start_step = video.checkpoint
+        return HttpResponseRedirect('../{}/{}'.format(video.id, video.checkpoint))
+    except IndexError:
+        return HttpResponseRedirect('../-1/0')
+
 def start(request):
     # start new annotation
-    unfinished_videos = Video.objects.filter(state=0)
     try:
         post = request.POST.get("submit", "continue")
-        if post == "continue":
-            annotating_videos = Video.objects.filter(state=1)
-            if len(annotating_videos) > 0:
-                video_id = annotating_videos[0].id
-            else:
-                video_id = unfinished_videos[0].id
+        if post == "resume":
+            return resume(request)
         else:
-            video_id = unfinished_videos[0].id
-        video = Video.objects.get(id=video_id)
-        start_step = video.checkpoint
-        return HttpResponseRedirect('../{}/{}'.format(video_id, start_step))
+            unfinished_videos = Video.objects.filter(state=0)
+            video = unfinished_videos[0]
+        return HttpResponseRedirect('../{}/{}'.format(video.id, video.checkpoint))
     except IndexError:
         return HttpResponseRedirect('../-1/0')
 
