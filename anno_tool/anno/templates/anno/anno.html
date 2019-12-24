@@ -49,6 +49,15 @@ $(window).keydown(function(e) {
 		  if ("{{video.id}}" != new_vid)
 			  window.location.replace("/anno/" + $("#vid").val() + "/99");
 		  break
+	case 69: //E end
+		  window.location.replace("/anno/{{ video.id }}/{{ video.steps|add:"-1"}}");
+		  break;
+	case 70: //F first
+		  window.location.replace("/anno/{{ video.id }}/0");
+		  break;
+	case 82: //R resume
+		  // window.location.replace("/anno/resume");
+		  break;
 	default:
 		  break;
 	return false;
