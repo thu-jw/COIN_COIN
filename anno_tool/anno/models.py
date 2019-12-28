@@ -18,6 +18,7 @@ class Video(models.Model):
     ]
     state = models.PositiveSmallIntegerField(default=0, choices=STATE_CHOICES)
     certainty = models.BooleanField(default=True)
+    note = models.CharField(max_length=300, default="")
 
     checkpoint = models.PositiveSmallIntegerField(default=0)
 
