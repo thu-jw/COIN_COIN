@@ -114,12 +114,14 @@ def navigate(request, video_id):
     # navigate in actions and videos
     video = get_object_or_404(Video, pk=video_id)
     post = request.POST["submit"]
+    print(request.POST)
 
     if post == "pv": # previous video
         video = Video.objects.get(pk=video.prev_vid)
         return HttpResponseRedirect('../{}/{}'.format(video.id, video.checkpoint))
 
     elif post == "nv":# next video
+        video.note = request.POST["comments"]
         video.state = 2 # finished
         video.save()
         unfinished_videos = Video.objects.filter(state=0)

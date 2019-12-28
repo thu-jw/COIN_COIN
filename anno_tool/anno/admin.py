@@ -8,7 +8,7 @@ TEXT_TO_STATE = {
 
 class VideoAdmin(admin.ModelAdmin):
     list_display = ('video_name', 'video_class', 'state', 'cut_points')
-    search_fields = ('video_name', 'video_class', 'state')
+    search_fields = ('video_name', 'video_class', 'state', 'note')
 
     def get_search_results(self, request, queryset, search_term):
         queryset, use_distinct = super(VideoAdmin, self).get_search_results(request, queryset, search_term)

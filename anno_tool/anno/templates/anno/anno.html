@@ -8,64 +8,70 @@
 {% block misc %}
   <link rel="stylesheet" href="{% static 'css/anno.css' %} ">
   <script>
-	var init = function () {
-	  //get scroll position in session storage
+    var init = function () {
+      //get scroll position in session storage
 
-	  var list_group = $("#action_name_list");
-	  var height = 0;
-	  for (let i = 0; i < {{start_step}}; i++) {
-		let item = $("#action" + (i+1).toString());
-		height += item.outerHeight() - 1;
-	  }
-	  list_group.scrollTop(height - 200);
-	};
+      var list_group = $("#action_name_list");
+      var height = 0;
+      for (let i = 0; i < {{start_step}}; i++) {
+        let item = $("#action" + (i+1).toString());
+        height += item.outerHeight() - 1;
+      }
+      list_group.scrollTop(height - 200);
+    };
 window.onload = init;
 
 $(window).keydown(function(e) {
   switch (e.keyCode) {
-	case 67: // C
-	  $("#cut").click();
-	  break;
-	case 65: // A
-	  $("#na").click();
-	  break;
-	case 86: // V
-	  $("#nv").click();
-	  break;
-	case 83: // S
-	  $("#pa").click();
-	  break;
-	case 66: // B
-	  $("#pv").click();
-	  break
-	case 37: // left arrow
-	  document.getElementById('prev_vid').click();
-	  break;
-	case 39: // right arrow
-	  document.getElementById('next_vid').click();
-	  break;
-	case 13: // enter
-	  var new_vid = $("#vid").val();
-	  if ("{{video.id}}" != new_vid)
-		window.location.replace("/anno/" + $("#vid").val() + "/99");
-	  break
-	case 69: //E end
-	  window.location.replace("/anno/{{ video.id }}/{{ video.steps|add:"-1"}}");
-	  break;
-	case 70: //F first
-	  window.location.replace("/anno/{{ video.id }}/0");
-	  break;
-	case 82: //R resume
-		window.location.replace("/anno/resume");
-	  break;
-	default:
-	  if (e.keyCode >= 48 && e.keyCode <= 58) {
-		// 0 ~ 9
-		var target = e.keyCode - 48;
-		window.location.replace("/anno/{{ video.id }}/" + target.toString());
-	  }
-	  break;
-	  return false;
+    case 67: // C
+      $("#cut").click();
+      break;
+    case 65: // A
+      $("#na").click();
+      break;
+    case 86: // V
+      $("#nv").click();
+      break;
+    case 83: // S
+      $("#pa").click();
+      break;
+    case 66: // B
+      $("#pv").click();
+      break
+    case 37: // left arrow
+      document.getElementById('prev_vid').click();
+      break;
+    case 39: // right arrow
+      document.getElementById('next_vid').click();
+      break;
+    case 13: // enter
+      if ($("#vid").is(":focus")){
+
+        var new_vid = $("#vid").val();
+        if ("{{video.id}}" != new_vid)
+          window.location.replace("/anno/" + $("#vid").val() + "/99");
+      }
+      e.preventDefault();
+      return false;
+    case 69: //E end
+      window.location.replace("/anno/{{ video.id }}/{{ video.steps|add:"-1"}}");
+      break;
+    case 70: //F first
+      window.location.replace("/anno/{{ video.id }}/0");
+      break;
+    case 82: //R resume
+      window.location.replace("/anno/resume");
+      break;
+    default:
+      if ((!$("#vid").is(":focus"))){
+        if (e.keyCode >= 48 && e.keyCode <= 58) {
+          // 0 ~ 9
+          var target = e.keyCode - 48;
+          window.location.replace("/anno/{{ video.id }}/" + target.toString());
+        }
+      }
+      break;
+      return false;
   }
 });
 
@@ -121,125 +127,130 @@ input[type=number] {
 {% block content %}
   <div class="container-fluid bg-1 text-center" id="main">
 
-	<div class="row" id="toprow">
-	  <div class="col-sm-3">
-		<h4>video id<br/>
-		  <div class="vid-group">
-			<a href="{% url 'anno:anno' video.id|add:"-1" 99 %}" id="prev_vid">
-			  <span class="fas fa-caret-left fa-arrows"></span>
-			</a>
-			<small>
-			  <input type="number" value="{{video.id}}" name="" id="vid" min="1" max="{{ num_videos }}"/>
-			</small>
-			<a href="{% url 'anno:anno' video.id|add:"1" 99 %}" id="next_vid">
-			  <span class="fas fa-caret-right fa-arrows"></span>
-			</a>
-		  </div>
-		</h4>
-	  </div>
-	  <div class="col-sm-3">
-		<h4>video name<br/>
-		  <small>{{ video.video_name }}</small>
-		</h4>
-	  </div>
-	  <div class="col-sm-3">
-		<h4>video class<br/>
-		  <small>{{ video.video_class }}</small>
-		</h4>
-	  </div>
-	  <div class="col-sm-3">
-		<h4>video state<br/>
-		  <small>{{ state }}</small>
-		</h4>
-	  </div>
-	</div>
+    <div class="row" id="toprow">
+      <div class="col-sm-3">
+        <h4>video id<br/>
+          <div class="vid-group">
+            <a href="{% url 'anno:anno' video.id|add:"-1" 99 %}" id="prev_vid">
+              <span class="fas fa-caret-left fa-arrows"></span>
+            </a>
+            <small>
+              <input type="number" value="{{video.id}}" name="" id="vid" min="1" max="{{ num_videos }}"/>
+            </small>
+            <a href="{% url 'anno:anno' video.id|add:"1" 99 %}" id="next_vid">
+              <span class="fas fa-caret-right fa-arrows"></span>
+            </a>
+          </div>
+        </h4>
+      </div>
+      <div class="col-sm-3">
+        <h4>video name<br/>
+          <small>{{ video.video_name }}</small>
+        </h4>
+      </div>
+      <div class="col-sm-3">
+        <h4>video class<br/>
+          <small>{{ video.video_class }}</small>
+        </h4>
+      </div>
+      <div class="col-sm-3">
+        <h4>video state<br/>
+          <small>{{ state }}</small>
+        </h4>
+      </div>
+    </div>
 
-	<div class="progress m-3">
-	  <div class="progress-bar" role="progressbar" style="width: {{ratio_finished}}%;" aria-valuemin="0" aria-valuemax="100">{{num_finished}} / {{num_videos}}</div>
-	</div>
+    <div class="progress m-3">
+      <div class="progress-bar" role="progressbar" style="width: {{ratio_finished}}%;" aria-valuemin="0" aria-valuemax="100">{{num_finished}} / {{num_videos}}</div>
+    </div>
 
-	<div class="row">
-	  <div class="col-sm-3" id="action_names">
-		<h4>Action names<br/>
-		  <small>total steps: {{video.steps}}</small>
-		</h4>
-		<ol class="list-group" id="action_name_list">
-		  {% for name in action_names %}
-			<a id="action{{forloop.counter}}" class="list-group-item {% if start_step|add:1 == forloop.counter %}active{% endif %}" href="{% url 'anno:anno' video.id forloop.counter|add:"-1" %}">{{ forloop.counter|add:"-1" }}. {{ name }}</a>
-		  {% endfor %}
-		</ol>
-	  </div>
-	  <div class="col-sm-9">
-		<div class="row">
-		  <div class="col-sm-6">
-			<div style="margin:10px">{{clip_info}}</div>
-		  </div>
-		  <div class="col-sm-6">
-			<form action="{% url 'anno:edit' video.id %}" method="post">
-			  {% csrf_token %}
-			  <button class="btn btn-success btn-edit" type="submit" name="edit", value="cut" id="cut">
-				Cut
-			  </button>
-			  <div class="btn-group">
-				<button type="button" class="btn {{cut_points|yesno:"btn-danger,btn-secondary"}} dropdown-toggle btn-edit disable" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-				  Delete
-				</button>
-				{% if cut_points %}
-				  <div class="dropdown-menu">
-					{% for point in cut_points %}
-					  <button class="dropdown-item" href="#" name="edit" value="{{forloop.counter|add:"-1"}}">{{point}}</button>
-					{% endfor %}
-					<div class="dropdown-divider"></div>
-					<button class="dropdown-item" href="#" name="edit" value="-1">All</button>
-				  </div>
-				{% endif %}
-			  </div>
-			  <input type="checkbox" {% if video.certainty %} checked {% endif %} data-toggle="toggle" data-on="Certain" data-off="Uncertain" name="certain" value="1" onchange="this.form.submit()">
-			</form>
-		  </div>
-		</div>
-		<hr/>
-		<form action="{% url 'anno:navigate' video.id %}" method="post">
-		  {% csrf_token %}
-		  <button class="btn btn-info btn-nav" type="submit" name="submit" value="pv" id="pv">
-			Previous video
-		  </button>
-		  {% if start_step > 0 %}
-			<button class="btn btn-primary btn-nav" type="submit" name="submit" value="pa" id="pa">
-			  Previous action
-			</button>
-		  {% endif %}
+    <div class="row">
+      <div class="col-sm-3" id="action_names">
+        <h4>Action names<br/>
+          <small>total steps: {{video.steps}}</small>
+        </h4>
+        <ol class="list-group" id="action_name_list">
+          {% for name in action_names %}
+            <a id="action{{forloop.counter}}" class="list-group-item {% if start_step|add:1 == forloop.counter %}active{% endif %}" href="{% url 'anno:anno' video.id forloop.counter|add:"-1" %}">{{ forloop.counter|add:"-1" }}. {{ name }}</a>
+          {% endfor %}
+        </ol>
+      </div>
+      <div class="col-sm-9">
+        <div class="row">
+          <div class="col-sm-6">
+            <div style="margin:10px">{{clip_info}}</div>
+          </div>
+          <div class="col-sm-6">
+            <form action="{% url 'anno:edit' video.id %}" method="post">
+              {% csrf_token %}
+              <button class="btn btn-success btn-edit" type="submit" name="edit", value="cut" id="cut">
+                Cut
+              </button>
+              <div class="btn-group">
+                <button type="button" class="btn {{cut_points|yesno:"btn-danger,btn-secondary"}} dropdown-toggle btn-edit disable" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  Delete
+                </button>
+                {% if cut_points %}
+                  <div class="dropdown-menu">
+                    {% for point in cut_points %}
+                      <button class="dropdown-item" href="#" name="edit" value="{{forloop.counter|add:"-1"}}">{{point}}</button>
+                    {% endfor %}
+                    <div class="dropdown-divider"></div>
+                    <button class="dropdown-item" href="#" name="edit" value="-1">All</button>
+                  </div>
+                {% endif %}
+              </div>
+              <input type="checkbox" {% if video.certainty %} checked {% endif %} data-toggle="toggle" data-on="Certain" data-off="Uncertain" name="certain" value="1" onchange="this.form.submit()">
+            </form>
+          </div>
+        </div>
+        <hr/>
+        <form action="{% url 'anno:navigate' video.id %}" method="post">
+          {% csrf_token %}
+          <button class="btn btn-info btn-nav" type="submit" name="submit" value="pv" id="pv">
+            Previous video
+          </button>
+          {% if start_step > 0 %}
+            <button class="btn btn-primary btn-nav" type="submit" name="submit" value="pa" id="pa">
+              Previous action
+            </button>
+          {% endif %}
 
-		  {% if start_step|add:1 < video.steps %}
-			<button class="btn btn-primary btn-nav" type="submit" name="submit" value="na" id="na">
-			  Next action
-			</button>
+          {% if start_step|add:1 < video.steps %}
+            <button class="btn btn-primary btn-nav" type="submit" name="submit" value="na" id="na">
+              Next action
+            </button>
 
-		  {% endif %}
-		  <button class="btn btn-info btn-nav" type="submit" name="submit" value="nv" id="nv">
-			Next video
-		  </button>
-		</form>
+          {% endif %}
+          <button class="btn btn-info btn-nav" type="submit" name="submit" value="nv" id="nv">
+            Next video
+          </button>
 
-		<div class="row {% if start_step in cut_points %}border-between{% endif %}" id="images">
-		<div class="col-sm-{% if second_img %}6{% else %}12{% endif %}" align="center">
-		  {% with 'images/data/'|add:first_img as first_static%}
-			<img src="{% static first_static %}" class="img-fluid">
-		  {% endwith %}
-		  <h5 class="img-caption">{{ start_step}}: {{ first_name }}</h5>
-		</div>
-		{% if second_img %}
-		  <div class="col-sm-6" align="center">
-			{% with 'images/data/'|add:second_img as second_static%}
-			  <img src="{% static second_static %}" class="img-fluid">
-			{% endwith %}
-			<h5 class="img-caption">{{ start_step|add:"1"}}: {{ second_name }}</h5>
-		  </div>
-	  {% endif %}
-		</div>
+          <div class="row {% if start_step in cut_points %}border-between{% endif %}" id="images">
+          <div class="col-sm-{% if second_img %}6{% else %}12{% endif %}" align="center">
+            {% with 'images/data/'|add:first_img as first_static%}
+              <img src="{% static first_static %}" class="img-fluid">
+            {% endwith %}
+            <h5 class="img-caption">{{ start_step}}: {{ first_name }}</h5>
+          </div>
+          {% if second_img %}
+            <div class="col-sm-6" align="center">
+              {% with 'images/data/'|add:second_img as second_static%}
+                <img src="{% static second_static %}" class="img-fluid">
+              {% endwith %}
+              <h5 class="img-caption">{{ start_step|add:"1"}}: {{ second_name }}</h5>
+            </div>
+          {% endif %}
+          </div>
+          {% if not video.certainty %}
+            <div class="input-group mb-3">
+              <input type="text" id="comments" class="form-control" aria-label="Amount (to the nearest dollar)" placeholder="Input your comments" name="comments" value="{{video.note}}">
+            </div>
+          {% endif %}
+        </form>
 
-	  </div>
-	</div>
+      </div>
+    </div>
   </div>
 {% endblock %}
 
