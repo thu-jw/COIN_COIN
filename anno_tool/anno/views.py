@@ -121,7 +121,10 @@ def navigate(request, video_id):
         return HttpResponseRedirect('../{}/{}'.format(video.id, video.checkpoint))
 
     elif post == "nv":# next video
-        video.note = request.POST["comments"]
+        try:
+            video.note = request.POST["comments"]
+        except:
+            pass
         video.state = 2 # finished
         video.save()
         unfinished_videos = Video.objects.filter(state=0)
