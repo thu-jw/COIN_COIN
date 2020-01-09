@@ -7,6 +7,8 @@ import os
 import numpy as np
 from .utils import load_action_dict, parse_cuts
 
+INF = 65536
+
 action_dict = load_action_dict()
 last_video_id = None
 action_names = None
@@ -16,7 +18,7 @@ def index(request):
 
 
 def anno(request, video_id, start_step):
-    if video_id == -1:
+    if video_id == INF:
         return HttpResponse("Congratulations! We have finished!")
 
 
@@ -135,7 +137,8 @@ def navigate(request, video_id):
             video_id = video.id
             start_step = video.checkpoint
         except:
-            video_id = start_step = 0
+            video_id = INF
+            start_step = 0
         return HttpResponseRedirect('../{}/{}'.format(video_id, start_step))
     elif post == "na": # next action
         # next action
@@ -163,7 +166,7 @@ def resume(request):
         start_step = video.checkpoint
         return HttpResponseRedirect('../{}/{}'.format(video.id, video.checkpoint))
     except IndexError:
-        return HttpResponseRedirect('../-1/0')
+        return HttpResponseRedirect('../{}/0'.format(INF))
 
 def start(request):
     # start new annotation
@@ -176,7 +179,7 @@ def start(request):
             video = unfinished_videos[0]
         return HttpResponseRedirect('../{}/{}'.format(video.id, video.checkpoint))
     except IndexError:
-        return HttpResponseRedirect('../-1/0')
+        return HttpResponseRedirect('../{}/0'.format(INF))
 
 def help(request):
     return render(request, "anno/help.html")
