@@ -51,6 +51,5 @@ for anno in annotations:
             dst_path = os.path.join('data_washed', video_name, str(i))
             os.makedirs(dst_path, exist_ok=True)
             os.symlink(src_path, os.path.join(dst_path, str(j)))
-            # shutil.copytree(src_path, dst_path, symlinks=True)
 
 # vim: ts=4 sw=4 sts=4 expandtab

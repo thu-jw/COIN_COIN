@@ -35,3 +35,45 @@ Ensure there is only one task in each clip.
 - data/data_washed: symlinks to /opt/data5/COIN_COIN and /opt/data5/COIN_COIN_washed
 
 
+## Steps
+- generate split json file
+```python
+[
+  {
+	  "video_name": "4MiubN1oQk
+	  "video_class": "ArcWeld",
+	  "clips": [[0, 2], [2, 3]]
+	  "steps": 3,
+	  "action_ids": "587,585,587",
+  },
+]
+```
+
+- use gurobi to split train and val
+
+```python
+[
+  {
+	  "video_name": "4MiubN1oQkg",
+	  "video_class": "ArcWeld",
+	  "clips": [[0, 2], [2, 3]]
+	  "steps": 3,
+	  "action_ids": "587,585,587",
+	  "train": false
+  },
+]
+```
+- generate question and answer pair
+```python
+[
+	{
+		"question": [path/to/img1, path/to/img2]
+		"choices": [
+			[path/to/choices/1],
+			[path/to/choices/2],
+			[path/to/choices/3],
+			[path/to/choices/4],
+		]
+	}
+]
+```
