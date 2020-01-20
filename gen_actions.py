@@ -14,7 +14,7 @@ paths_dict = {
     path.rsplit('/')[-1]: path for path in paths
 }
 
-annotations = json.load(open('../annotations/COIN.json', 'r'))
+annotations = json.load(open('COIN.json', 'r'))
 # check exsit
 for key, info in tqdm(annotations['database'].items()):
     path = paths_dict[key]
