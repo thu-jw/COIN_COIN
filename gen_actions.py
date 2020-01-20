@@ -28,14 +28,16 @@ for key, info in tqdm(annotations['database'].items()):
         start, end = action['segment']
         label = action['label']
         start_frame = int(fps * start) + 1
-        stride = int((end - start) * fps // 16)
-        dst_path = os.path.join('data_with_name', key, f'{action_id:2d}_{label}')
-        os.makedirs(dst_path, exist_ok=True)
+        stride = (end - start) * fps / 16
+        dst_dir = os.path.join('data', key, f'{action_id}')
+        os.makedirs(dst_dir, exist_ok=True)
+
         for i in range(16):
-            frame_id = i * stride + start_frame
+            frame_id = int(i * stride + start_frame)
             filename = f'img_{frame_id:05d}.jpg'
             src_path = os.path.join(path, filename)
-            shutil.copyfile(src_path, os.path.join(dst_path, filename))
+            dst_path = os.path.join(dst_dir, f'img_{i:02d}.jpg')
+            shutil.copyfile(src_path, dst_path)
 
 
 # vim: ts=4 sw=4 sts=4 expandtab

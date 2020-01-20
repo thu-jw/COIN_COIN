@@ -1,0 +1,81 @@
+{% extends "anno/base.html" %}
+{% load static %}
+
+{% block title %}
+  COIN COIN Annotation Tool
+{% endblock %}
+
+{% block misc %}
+<link rel="stylesheet" href="{% static 'css/anno.css' %} ">
+<style type="text/css" media="screen">
+.question {
+	width: 30%;
+}
+
+.choices {
+	width: 15%;
+}
+
+
+#main {
+	margin-top: 80px;
+	padding-left: 10%;
+	padding-right: 10%;
+}
+</style>
+{% endblock %}
+
+{% block navtab %}
+  "dataset"
+{% endblock %}
+
+{% block content %}
+  <div class="container-fluid bg-1" id="main">
+	  <div class="row">
+		  <div class="col-sm-1">
+			  <h5>Question:</h5>
+		  </div>
+		 <div class="col-sm-5">
+		  {% for q in question %}
+			  {% with 'images/data/'|add:q as static_q%}
+				  <img src="{% static static_q %}" class="img-fluid question">
+			  {% endwith %}
+		  {%endfor%}
+		</div>
+		<div class="col-sm-6">
+			{% if id > 0 %}
+			<a class="btn btn-primary btn-nav" href="{% url "anno:dataset" setting phase id|add:"-1" %}">
+            Previous video
+			{% endif %}
+          </a>
+			<a class="btn btn-info btn-nav" href="{% url "anno:dataset" setting phase id|add:"1" %}">
+            Next video
+          </a>
+		</div>
+	  </div>
+	  <hr>
+	  <h5>Choices:</h5>
+	  <ul>
+		  {% for c in choices %}
+			  <li>
+				  <div class="row">
+					  <div class="col-sm-11">
+				  {% for s in c|get_item:"gifs" %}
+					  {% with 'images/data/'|add:s as static_s%}
+						  <img src="{% static static_s %}" class="img-fluid step choices">
+					  {% endwith %}
+				  {% endfor %}
+					  </div>
+					  <div class="col-sm-1">
+			  <span class="wrong_type" style="color: {% if c|get_item:"correct" %} green {% else %} red {% endif %}">{{c|get_item:"wrong_type"}}</span>
+					  </div>
+				  </div>
+			  </li>
+		  {% endfor %}
+	  </ul>
+	  </div>
+
+  </div>
+{% endblock %}
+
+<!--vim: shiftwidth=2-->

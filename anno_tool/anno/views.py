@@ -5,6 +5,7 @@ from .models import Video
 import glob
 import os
 import numpy as np
+import json
 from .utils import load_action_dict, parse_cuts
 
 INF = 65536
@@ -183,5 +184,26 @@ def start(request):
 
 def help(request):
     return render(request, "anno/help.html")
+
+metadata = {}
+def dataset(request, setting, phase, qa_id):
+    assert setting in ['long', 'short']
+    assert phase in ['train', 'test']
+    key = f'{setting}/{phase}'
+
+    if key not in metadata:
+        metadata[key] = json.load(open(f'anno/static/metadata/{key}.json', 'r'))
+
+    qa_id = np.clip(qa_id, 0, len(metadata[key]))
+    qa = metadata[key][qa_id].copy()
+    qa.update({
+        "id": qa_id,
+        "phase": phase,
+        "setting": setting,
+    })
+    for c in qa['choices']:
+        c['gifs'] = [f'{s}/action.gif' for s in c['steps']]
+
+    return render(request, "anno/dataset.html", qa)
 
 # Create your views here.

@@ -42,9 +42,9 @@ Ensure there is only one task in each clip.
   {
 	  "video_name": "4MiubN1oQk
 	  "video_class": "ArcWeld",
-	  "clips": [[0, 2], [2, 3]]
-	  "steps": 3,
 	  "action_ids": "587,585,587",
+	  "clips": [[0, 2), [2, 3)]
+	  "num_clips": 2,
   },
 ]
 ```
@@ -56,7 +56,7 @@ Ensure there is only one task in each clip.
   {
 	  "video_name": "4MiubN1oQkg",
 	  "video_class": "ArcWeld",
-	  "clips": [[0, 2], [2, 3]]
+	  "clips": [[0, 1], [2, 3]]
 	  "steps": 3,
 	  "action_ids": "587,585,587",
 	  "train": false
@@ -65,6 +65,7 @@ Ensure there is only one task in each clip.
 ```
 - generate question and answer pair
 ```python
+
 [
 	{
 		"question": [path/to/img1, path/to/img2]
