@@ -12,7 +12,30 @@ Ensure there is only one task in each clip.
 
 ## Files
 - COIN.json: original annotation of COIN
-- COIN_COIN.json: annotation of COIN_COIN, the format is (only useful keys are listed): 
+- anno_tool: annotation tool
+- data_gen: codes to generate COIN COIN
+	- gen_frames.py: extract 16 frames per action
+	- gen_dataset.py: generate metadata of COIN COIN dataset
+	- gen_gifs.py: generate gif for each action for visualization
+
+- data_raw: 
+
+## Usage
+### Annotation
+Extract 16 frames for each action:
+```
+python data_gen/gen_frames.py
+```
+
+After finished annotating using anno_tool, dump annotation results to json:
+
+```
+cd anno_tool
+python manage.py dumpdata anno -o ../data_gen/anno.json
+```
+
+The format of annotation is (only useful keys are listed): 
+
 ```python
 [
   {
@@ -29,41 +52,28 @@ Ensure there is only one task in each clip.
   },
 ]
 ```
-- gen_actions.py: extract 16 frames for each action
-- gen_dataset.py: generate washed COIN_COIN dataset
-- anno_tool: a web annotation tool
-- data/data_washed: symlinks to /opt/data5/COIN_COIN and /opt/data5/COIN_COIN_washed
 
-
-## Steps
-- generate split json file
-```python
-[
-  {
-	  "video_name": "4MiubN1oQk
-	  "video_class": "ArcWeld",
-	  "action_ids": "587,585,587",
-	  "clips": [[0, 2), [2, 3)]
-	  "num_clips": 2,
-  },
-]
+### Generate COIN_COIN metadata
+```
+python data_gen/gen_dataset.py -s <setting> -m <min length of clip> -M <max length of clip> -r <test-ratio>
 ```
 
-- use gurobi to split train and val
+- setting: `short` or `long`
+- the number of actions in each clip must between `m` and `M`. For `short` setting, `(m, M) = (1, 1)` by default; For `long` setting, `(m, M) = (2, 5)` by default
+- percentage of test set is <test-ratio> approximately (default: 0.1)
 
-```python
-[
-  {
-	  "video_name": "4MiubN1oQkg",
-	  "video_class": "ArcWeld",
-	  "clips": [[0, 1], [2, 3]]
-	  "steps": 3,
-	  "action_ids": "587,585,587",
-	  "train": false
-  },
-]
-```
-- generate question and answer pair
+data_gen/gen_dataset.py will perform the following steps:
+
+1. filter_clips: Cut the clips longer than `M` and drop the clips shorter than `m`
+2. split_train_test: Split the whole dataset into train and test set, ensuring that the clips from the same video are not seperated.
+3. gen_QA: Generate questions and choices. There are 4 types of wrong answers:
+	- missing step
+	- swapped steps
+	- extra step, from the same video
+	- replaced step, from other videos in the same class
+In `long` setting, all of the above types of wrong answers will appear; in `short` setting only `replaced step` will appear.
+
+The metadata will saved in `metadata/<setting>/<phase>.json` in the following format:
 ```python
 
 [
@@ -76,5 +86,11 @@ Ensure there is only one task in each clip.
 			[path/to/choices/4],
 		]
 	}
+	...
 ]
 ```
+To visualize the dataset, run
+```
+python data_gen/gen_gifs.py
+```
+and visit `http://166.111.72.69:61081` and go to `Dataset` tab.

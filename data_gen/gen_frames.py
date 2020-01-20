@@ -29,7 +29,7 @@ for key, info in tqdm(annotations['database'].items()):
         label = action['label']
         start_frame = int(fps * start) + 1
         stride = (end - start) * fps / 16
-        dst_dir = os.path.join('data', key, f'{action_id}')
+        dst_dir = os.path.join('data_raw', key, f'{action_id}')
         os.makedirs(dst_dir, exist_ok=True)
 
         for i in range(16):

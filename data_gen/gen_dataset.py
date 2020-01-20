@@ -41,7 +41,7 @@ def filter_clips(args, save=False):
     save results to csv
     """
     print('filtering clips')
-    annotations = json.load(open('anno.json', 'r'), object_pairs_hook=OrderedDict)
+    annotations = json.load(open('data_gen/anno.json', 'r'), object_pairs_hook=OrderedDict)
     df = pd.DataFrame(columns=['video_name', 'video_class', 'action_ids', 'num_clips', 'clips', 'train'])
     for anno in tqdm(annotations):
         row = OrderedDict()
@@ -202,18 +202,6 @@ def gen_QA(args, df=None):
     json.dump(test_set, open('metadata/{}/test.json'.format(args.setting), 'w'))
     print(args.setting, len(train_set), len(test_set))
 
-def get_steps(s):
-    """"load images from step"""
-    images_path = sorted(glob.glob(f'data_raw/{s}/img_*.jpg'))[4:12]
-    images = [cv2.imread(p)[np.newaxis, :] for p in images_path]
-    images = np.concatenate(images, axis=0)
-    return images
-
-
-def pack_dataset(args):
-    pass
-
-
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('--max-length', '-M', help="max length of clip", default=5)
@@ -231,22 +219,10 @@ if __name__ == "__main__":
         assert args.max_length >= args.min_length
         assert args.min_length >= 2
 
-    args.csv = 'anno_{}.csv'.format(args.setting)
+    args.csv = 'data_gen/anno_{}.csv'.format(args.setting)
 
-    # df = filter_clips(args, save=True)
-    # df = split_train_test(args, df)
+    df = filter_clips(args, save=True)
+    df = split_train_test(args, df)
     gen_QA(args, df=None)
-
-    # pack dataset
-    # for phase in ['train', 'test']:
-    #     qas = json.load(open(f'metadata/{args.setting}/{phase}.json'))
-    #     L = int(np.log10(len(qas))) + 1
-    #     print(phase, len(qas))
-    #     for i, qa in enumerate(tqdm(qas)):
-    #         qa['question'] = [cv2.imread(f'data_raw/{q}') for q in qa['question']]
-    #         for c in qa['choices']:
-    #             c['steps'] = [get_steps(s) for s in c['steps']]
-    #         pkl.dump(qa, open(f'data/{args.setting}/{phase}/{i:0{L}d}.pkl', 'wb'))
-
 
 # vim: ts=4 sw=4 sts=4 expandtab
