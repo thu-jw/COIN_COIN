@@ -6,7 +6,6 @@
 {% endblock %}
 
 {% block misc %}
-<link rel="stylesheet" href="{% static 'css/anno.css' %} ">
 <style type="text/css" media="screen">
 .question {
 	width: 30%;
@@ -19,8 +18,8 @@
 
 #main {
 	margin-top: 80px;
-	padding-left: 10%;
-	padding-right: 10%;
+	padding-left: 5%;
+	padding-right: 5%;
 }
 </style>
 {% endblock %}
@@ -45,12 +44,30 @@
 		<div class="col-sm-6">
 			{% if id > 0 %}
 			<a class="btn btn-primary btn-nav" href="{% url "anno:dataset" setting phase id|add:"-1" %}">
-            Previous video
+            Prev QA
 			{% endif %}
           </a>
 			<a class="btn btn-info btn-nav" href="{% url "anno:dataset" setting phase id|add:"1" %}">
-            Next video
+            Next QA
           </a>
+		  <div class="btn-group">
+			<button type="button" class="btn btn-info dropdown-toggle btn-edit disable" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+				Setting
+			</button>
+			  <div class="dropdown-menu">
+				<a class="dropdown-item" href="{% url "anno:dataset" "long" phase id %}">long</a>
+				<a class="dropdown-item" href="{% url "anno:dataset" "short" phase id %}">short</a>
+			  </div>
+		  </div>
+		  <div class="btn-group">
+			<button type="button" class="btn btn-info dropdown-toggle btn-edit disable" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+				Phase
+			</button>
+			  <div class="dropdown-menu">
+				<a class="dropdown-item" href="{% url "anno:dataset" setting "train" id %}">train</a>
+				<a class="dropdown-item" href="{% url "anno:dataset" setting "test" id %}">test</a>
+			  </div>
+		  </div>
 		</div>
 	  </div>
 	  <hr>
