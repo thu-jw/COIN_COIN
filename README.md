@@ -1,15 +1,5 @@
 # COIN COIN
 
-## Data
-- Extracted frames:
-Extract 16 frames for each action
-`/opt/data5/COIN_COIN/{video_name}/{action_index}/img_*.jpg`
-
-- Washed data:
-Ensure there is only one task in each clip.
-
-`/opt/data5/COIN_COIN_washed/{video_name}/{clip_index}/{action_index}/img_*.jpg`
-
 ## Files
 - COIN.json: original annotation of COIN
 - anno_tool: annotation tool
