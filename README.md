@@ -83,7 +83,7 @@ To visualize the dataset, run
 ```
 python data_gen/gen_gifs.py
 ```
-and visit `http://166.111.72.69:61081` and go to `Dataset` tab.
+and visit [http://166.111.72.69:61081](http://166.111.72.69:61081) and go to `Dataset` tab.
 
 ### Training
 `dataset.py` provides the way to load the dataset. Each batch contains 
