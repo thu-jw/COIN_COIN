@@ -68,16 +68,15 @@ The metadata will saved in `metadata/<setting>/<phase>.json` in the following fo
 
 ```python
 [
-	{
-		"question": [path/to/img1, path/to/img2]
-		"choices": [
-			[path/to/choices/1],
-			[path/to/choices/2],
-			[path/to/choices/3],
-			[path/to/choices/4],
-		]
-	}
-	...
+  {
+  	"question": [path/to/img1, path/to/img2]
+  	  "choices": [
+  		  [path/to/choices/1],
+  		  [path/to/choices/2],
+  		  [path/to/choices/3],
+  		  [path/to/choices/4],
+  	  ]
+  }
 ]
 ```
 To visualize the dataset, run
