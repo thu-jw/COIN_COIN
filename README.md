@@ -59,13 +59,14 @@ data_gen/gen_dataset.py will perform the following steps:
 3. gen_QA: Generate questions and choices. There are 4 types of wrong answers:
 	- missing step
 	- swapped steps
-	- extra step, from the same video
-	- replaced step, from other videos in the same class
+	- extra step (from the same video)
+	- replaced step (from other videos in the same class)
+
 In `long` setting, all of the above types of wrong answers will appear; in `short` setting only `replaced step` will appear.
 
 The metadata will saved in `metadata/<setting>/<phase>.json` in the following format:
-```python
 
+```python
 [
 	{
 		"question": [path/to/img1, path/to/img2]
