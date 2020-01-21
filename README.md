@@ -94,3 +94,11 @@ To visualize the dataset, run
 python data_gen/gen_gifs.py
 ```
 and visit `http://166.111.72.69:61081` and go to `Dataset` tab.
+
+### Training
+`dataset.py` provides the way to load the dataset. Each batch contains 
+- question: `(batch_size, 2, channel=3, height, width)`
+- choices: `(batch_size, 4, max_length, num_frames=8, channel=3, height, width)`
+- label: `(batch_size, 4)`
+
+For `long` setting, `max_legnth = M + 1` (the length of choice with wrong type of `extra` is `M + 1`); For `short` setting, `max_legnth = 1`.
