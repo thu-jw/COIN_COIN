@@ -8,7 +8,7 @@ from glob import glob
 from PIL import Image
 import argparse
 
-class COIN_Dataset(Dataset):
+class COIN_COIN_Dataset(Dataset):
     def __init__(self, args):
         self.setting = args.setting
         self.phase = args.phase
@@ -69,7 +69,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     dataloader = DataLoader(
-        dataset=COIN_Dataset(args),
+        dataset=COIN_COIN_Dataset(args),
         batch_size=2, shuffle=True,
         num_workers=16
     )
