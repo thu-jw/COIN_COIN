@@ -52,7 +52,7 @@ python data_gen/gen_dataset.py -s <setting> -m <min length of clip> -M <max leng
 - the number of actions in each clip must between `m` and `M`. For `short` setting, `(m, M) = (1, 1)` by default; For `long` setting, `(m, M) = (2, 5)` by default
 - percentage of test set is <test-ratio> approximately (default: 0.1)
 
-data_gen/gen_dataset.py will perform the following steps:
+`data_gen/gen_dataset.py` will perform the following steps:
 
 1. filter_clips: Cut the clips longer than `M` and drop the clips shorter than `m`
 2. split_train_test: Split the whole dataset into train and test set, ensuring that the clips from the same video are not seperated.
