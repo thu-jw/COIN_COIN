@@ -101,4 +101,4 @@ and visit `http://166.111.72.69:61081` and go to `Dataset` tab.
 - choices: `(batch_size, 4, max_length, num_frames=8, channel=3, height, width)`
 - label: `(batch_size, 4)`
 
-For `long` setting, `max_legnth = M + 1` (the length of choice with wrong type of `extra` is `M + 1`); For `short` setting, `max_legnth = 1`.
+For `long` setting, `max_legnth = M + 1` (the length of choice with wrong type of `extra` is `M + 1`); For `short` setting, `max_legnth = 1`. Currently, all the images are padded and resized to `(256, 256)`.
