@@ -175,9 +175,12 @@ def gen_QA(args, df=None):
             pool_same = [i for i in range(len(action_ids)) if i < clip[0] or i >= clip[1]]
             np.random.shuffle(pool_same)
             while len(choices) < 4 and len(pool_same) > 0:
-                steps = choices[0]['steps'].copy()
-                i1 = np.random.randint(len(steps))
                 i2 = pool_same.pop()
+                pool_k1 = [k for k in range(clip[0], clip[1]) if action_ids[i2] != action_ids[k]]
+                if len(pool_k1) == 0:
+                    continue
+                i1 = np.random.choice(pool_k1) - clip[0]
+                steps = choices[0]['steps'].copy()
                 steps[i1] = '{}/{}'.format(video_name, i2)
 
                 choices.append({
@@ -224,6 +227,7 @@ if __name__ == "__main__":
     parser.add_argument('--min-length', '-m', help="min length of clip", default=2)
     parser.add_argument('--test-ratio', '-r', help="ratio for test samples", default=0.1)
     parser.add_argument('--setting', '-s', help="setting", default='long', choices=('long', 'short'))
+    parser.add_argument('--use-checkpoints', '-c', default=False, action='store_true')
     args = parser.parse_args()
 
     np.random.seed(1)
@@ -237,8 +241,9 @@ if __name__ == "__main__":
 
     args.csv = 'data_gen/anno_{}.csv'.format(args.setting)
 
-    df = filter_clips(args, save=True)
-    df = split_train_test(args, df)
+    if not args.use_checkpoints:
+        df = filter_clips(args, save=True)
+        df = split_train_test(args, df)
     gen_QA(args, df=None)
 
 # vim: ts=4 sw=4 sts=4 expandtab
