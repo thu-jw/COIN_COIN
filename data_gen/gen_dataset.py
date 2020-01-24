@@ -171,18 +171,34 @@ def gen_QA(args, df=None):
                         'wrong_type': 'extra',
                     })
 
-            # 4. replacing
-            while len(choices) < 4:
+            # 4. replacing: same
+            pool_same = [i for i in range(len(action_ids)) if i < clip[0] or i >= clip[1]]
+            np.random.shuffle(pool_same)
+            while len(choices) < 4 and len(pool_same) > 0:
                 steps = choices[0]['steps'].copy()
                 i1 = np.random.randint(len(steps))
-                item = df.loc[(df.video_class == row['video_class']) & (df.video_name != row['video_name'])].sample().iloc[0]
-                i2 = np.random.randint(item['num_actions'])
-                steps[i1] = '{}/{}'.format(item['video_name'], i2)
+                i2 = pool_same.pop()
+                steps[i1] = '{}/{}'.format(video_name, i2)
+
                 choices.append({
                     'steps': steps,
                     'correct': False,
-                    'wrong_type': 'replacing',
+                    'wrong_type': 'replace_same',
                 })
+
+            # 4. replacing: other
+            if len(choices) < 4:
+                items = df.loc[(df.video_class == row['video_class']) & (df.video_name != row['video_name'])].sample(n=4-len(choices), random_state=1)
+                for _, item in items.iterrows():
+                    steps = choices[0]['steps'].copy()
+                    i1 = np.random.randint(len(steps))
+                    i2 = np.random.randint(item['num_actions'])
+                    steps[i1] = '{}/{}'.format(item['video_name'], i2)
+                    choices.append({
+                        'steps': steps,
+                        'correct': False,
+                        'wrong_type': 'replace_other',
+                    })
 
             np.random.shuffle(choices)
             if is_train:
