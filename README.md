@@ -56,15 +56,15 @@ python data_gen/gen_dataset.py -s <setting> -m <min length of clip> -M <max leng
 
 1. filter_clips: Cut the clips longer than `M` and drop the clips shorter than `m`
 2. split_train_test: Split the whole dataset into train and test set, ensuring that the clips from the same video are not seperated.
-3. gen_QA: Generate questions and choices. There are 4 types of wrong answers:
+3. gen_QA: Generate questions and choices. There are 5 types of wrong answers:
 	- missing step
 	- swapped steps
 	- extra step (from the same video)
+	- replaced step (from other clips of the same video)
 	- replaced step (from other videos in the same class)
 
-In `long` setting, all of the above types of wrong answers will appear; in `short` setting only `replaced step` will appear.
+In `long` setting, all of the above types of wrong answers will appear; in `short` setting only `replaced step` will appear. When generating the Q/A pair, we try to construct at most 2 choices for each wrong type and random selected 3 wrong choices. Therefore, there are 3 wrong choices and 1 correct choice in sample.
 
-The metadata will saved in `metadata/<setting>/<phase>.json` in the following format:
 
 ```python
 [
@@ -92,3 +92,5 @@ and visit [http://166.111.72.69:61081](http://166.111.72.69:61081) and go to `Da
 - label: `(batch_size, 4)`
 
 For `long` setting, `max_legnth = M + 1` (the length of choice with wrong type of `extra` is `M + 1`); For `short` setting, `max_legnth = 1`. Currently, all the images are padded and resized to `(256, 256)`.
+
+

@@ -14,6 +14,11 @@ import random
 import cv2
 import pickle as pkl
 
+def nchoice(array, size=2):
+    if size is None:
+        size = len(array)
+    return random.sample(array, min(len(array), size))
+
 def smart_load(obj):
     return json.loads(obj) if isinstance(obj, str) else obj
 
@@ -128,59 +133,63 @@ def gen_QA(args, df=None):
             # Q[0], Q[1] are start and end frame
             question = [sorted(glob.glob('data_raw/{}/{}/img_*.jpg'.format(video_name, clip[i] - i)))[-i].split('/', 1)[-1] for i in range(2)]
             choices = []
-            choices.append({
-                'steps': ['{}/{}'.format(video_name, i) for i in np.arange(*clip)],
+            correct_steps = ['{}/{}'.format(video_name, i) for i in np.arange(*clip)]
+            correct_choice = {
+                'steps': correct_steps,
                 'correct': True,
                 'wrong_type': 'correct',
-            })
+            }
 
 
             # try to generate wrong anwers
             if args.setting == 'long':
                 # the first three types of wrong choices are only valid in long term setting
                 # 1. missing
-                steps = choices[0]['steps'].copy()
-                steps.pop(np.random.randint(0, len(steps)))
-                choices.append({
-                    'steps': steps,
-                    'correct': False,
-                    'wrong_type': 'missing',
-                })
-                # 2. swap
-                steps = choices[0]['steps'].copy()
-                pool = [k for k in itertools.product(np.arange(*clip), np.arange(*clip)) if action_ids[k[0]] != action_ids[k[1]]]
-                if len(pool) > 0:
-                    k1, k2 = random.choice(pool)
-                    i1, i2 = k1 - clip[0], k2 - clip[0]
-                    steps[i1], steps[i2] = steps[i2], steps[i1]
+                pool = [i for i in range(len(correct_steps))]
+                for idx in nchoice(pool):
+                    steps = correct_steps.copy()
+                    steps.pop(idx)
                     choices.append({
                         'steps': steps,
                         'correct': False,
-                        'wrong_type': 'swap',
+                        'wrong_type': 'missing',
                     })
+
+                # 2. swap
+                pool = [k for k in itertools.product(np.arange(*clip), np.arange(*clip)) if action_ids[k[0]] != action_ids[k[1]]]
+                if len(pool) > 0:
+                    for k1, k2 in nchoice(pool):
+                        steps = correct_steps.copy()
+                        i1, i2 = k1 - clip[0], k2 - clip[0]
+                        steps[i1], steps[i2] = steps[i2], steps[i1]
+                        choices.append({
+                            'steps': steps,
+                            'correct': False,
+                            'wrong_type': 'swap',
+                        })
 
                 # 3. extra
                 if row['num_clips'] > 1:
-                    steps = choices[0]['steps'].copy()
-                    i1 = np.random.choice([i for i in range(len(action_ids)) if i < clip[0] or i >= clip[1]])
-                    new = '{}/{}'.format(video_name, i1)
-                    steps.insert(np.random.randint(len(steps)), new)
-                    choices.append({
-                        'steps': steps,
-                        'correct': False,
-                        'wrong_type': 'extra',
-                    })
+                    pool = [i for i in range(len(action_ids)) if i < clip[0] or i >= clip[1]]
+                    for i1 in nchoice(pool):
+                        steps = correct_steps.copy()
+                        new = '{}/{}'.format(video_name, i1)
+                        steps.insert(np.random.randint(len(steps)), new)
+                        choices.append({
+                            'steps': steps,
+                            'correct': False,
+                            'wrong_type': 'extra',
+                        })
 
             # 4. replacing: same
-            pool_same = [i for i in range(len(action_ids)) if i < clip[0] or i >= clip[1]]
-            np.random.shuffle(pool_same)
-            while len(choices) < 4 and len(pool_same) > 0:
-                i2 = pool_same.pop()
+            pool = [i for i in range(len(action_ids)) if i < clip[0] or i >= clip[1]]
+            count = 0
+            for i2 in nchoice(pool, size=None):
                 pool_k1 = [k for k in range(clip[0], clip[1]) if action_ids[i2] != action_ids[k]]
                 if len(pool_k1) == 0:
                     continue
                 i1 = np.random.choice(pool_k1) - clip[0]
-                steps = choices[0]['steps'].copy()
+                steps = correct_steps.copy()
                 steps[i1] = '{}/{}'.format(video_name, i2)
 
                 choices.append({
@@ -188,12 +197,15 @@ def gen_QA(args, df=None):
                     'correct': False,
                     'wrong_type': 'replace_same',
                 })
+                count += 1
+                if count >= 2 and len(choices) > 3:
+                    break
 
-            # 4. replacing: other
-            if len(choices) < 4:
-                items = df.loc[(df.video_class == row['video_class']) & (df.video_name != row['video_name'])].sample(n=4-len(choices), random_state=1)
+            # 5. replacing: other
+            if len(choices) < 3:
+                items = df.loc[(df.video_class == row['video_class']) & (df.video_name != row['video_name'])].sample(n=3-len(choices), random_state=1)
                 for _, item in items.iterrows():
-                    steps = choices[0]['steps'].copy()
+                    steps = correct_steps.copy()
                     i1 = np.random.randint(len(steps))
                     i2 = np.random.randint(item['num_actions'])
                     steps[i1] = '{}/{}'.format(item['video_name'], i2)
@@ -204,6 +216,10 @@ def gen_QA(args, df=None):
                     })
 
             np.random.shuffle(choices)
+            choices = choices[:3]
+            choices.append(correct_choice)
+            np.random.shuffle(choices)
+
             if is_train:
                 train_set.append({
                     'question': question,
