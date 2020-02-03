@@ -170,7 +170,7 @@ def gen_QA(args, df=None):
 
                 # 3. extra
                 if row['num_clips'] > 1:
-                    pool = [i for i in range(len(action_ids)) if i < clip[0] or i >= clip[1]]
+                    pool = [i for i in range(len(action_ids))]# if i < clip[0] or i >= clip[1]]
                     for i1 in nchoice(pool):
                         steps = correct_steps.copy()
                         new = '{}/{}'.format(video_name, i1)
