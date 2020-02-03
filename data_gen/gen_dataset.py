@@ -123,6 +123,7 @@ def gen_QA(args, df=None):
        df = pd.read_csv(args.csv)
     train_set = []
     test_set = []
+
     for _, row in df.iterrows():
         video_name = row['video_name']
         clips = smart_load(row['clips'])
@@ -169,20 +170,19 @@ def gen_QA(args, df=None):
                         })
 
                 # 3. extra
-                if row['num_clips'] > 1:
-                    pool = [i for i in range(len(action_ids))]# if i < clip[0] or i >= clip[1]]
-                    for i1 in nchoice(pool):
-                        steps = correct_steps.copy()
-                        new = '{}/{}'.format(video_name, i1)
-                        steps.insert(np.random.randint(len(steps)), new)
-                        choices.append({
-                            'steps': steps,
-                            'correct': False,
-                            'wrong_type': 'extra',
-                        })
+                pool = [i for i in range(len(action_ids))]# if i < clip[0] or i >= clip[1]]
+                for i1 in nchoice(pool):
+                    steps = correct_steps.copy()
+                    new = '{}/{}'.format(video_name, i1)
+                    steps.insert(np.random.randint(len(steps)), new)
+                    choices.append({
+                        'steps': steps,
+                        'correct': False,
+                        'wrong_type': 'extra',
+                    })
 
             # 4. replacing: same
-            pool = [i for i in range(len(action_ids)) if i < clip[0] or i >= clip[1]]
+            pool = [i for i in range(len(action_ids))]# if i < clip[0] or i >= clip[1]]
             count = 0
             for i2 in nchoice(pool, size=None):
                 pool_k1 = [k for k in range(clip[0], clip[1]) if action_ids[i2] != action_ids[k]]
@@ -236,6 +236,23 @@ def gen_QA(args, df=None):
     json.dump(train_set, open('metadata/{}/train.json'.format(args.setting), 'w'))
     json.dump(test_set, open('metadata/{}/test.json'.format(args.setting), 'w'))
     print(args.setting, len(train_set), len(test_set))
+
+    # get stat
+    dataset = {
+        'train': train_set,
+        'test': test_set,
+    }
+    for k, v in dataset.items():
+        print(k)
+        stat = {}
+        for QA in v:
+            for choice in QA['choices']:
+                wrong_type = choice['wrong_type']
+                if wrong_type not in stat:
+                    stat[wrong_type] = 1
+                else:
+                    stat[wrong_type] += 1
+        print(stat)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
