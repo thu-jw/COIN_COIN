@@ -187,7 +187,7 @@ def help(request):
 
 metadata = {}
 def dataset(request, setting, phase, qa_id):
-    assert setting in ['long', 'short']
+    assert setting in ['long', 'short', 'long_new']
     assert phase in ['train', 'test']
     key = f'{setting}/{phase}'
 
