@@ -20,5 +20,8 @@ from anno_tool import views
 urlpatterns = [
     path('', views.index, name='index'),
     path('anno/', include('anno.urls')),
+    path('humantest/', include('humantest.urls')),
+    path('accounts/', include('django.contrib.auth.urls')),
+    path('signup/', views.signup, name="signup"),
     path('admin/', admin.site.urls),
 ]
