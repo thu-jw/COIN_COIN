@@ -36,7 +36,7 @@
 		  </div>
 		 <div class="col-sm-5">
 		  {% for q in question %}
-			  {% with 'images/data/'|add:q as static_q%}
+			  {% with 'data/'|add:q as static_q%}
 				  <img src="{% static static_q %}" class="img-fluid question">
 			  {% endwith %}
 		  {%endfor%}
@@ -56,7 +56,7 @@
 			</button>
 			  <div class="dropdown-menu">
 				<a class="dropdown-item" href="{% url "anno:dataset" "long" phase id %}">long</a>
-				<a class="dropdown-item" href="{% url "anno:dataset" "long_new" phase id %}">long_new</a>
+				<a class="dropdown-item" href="{% url "anno:dataset" "long_uniform" phase id %}">long_uniform</a>
 				<a class="dropdown-item" href="{% url "anno:dataset" "short" phase id %}">short</a>
 			  </div>
 		  </div>
@@ -79,7 +79,7 @@
 				  <div class="row">
 					  <div class="col-sm-11">
 				  {% for s in c|get_item:"gifs" %}
-					  {% with 'images/data/'|add:s as static_s%}
+					  {% with 'data/'|add:s as static_s%}
 						  <img src="{% static static_s %}" class="img-fluid step choices">
 					  {% endwith %}
 				  {% endfor %}

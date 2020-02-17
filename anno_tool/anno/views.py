@@ -187,12 +187,12 @@ def help(request):
 
 metadata = {}
 def dataset(request, setting, phase, qa_id):
-    assert setting in ['long', 'short', 'long_new']
+    assert setting in ['long', 'short', 'long_uniform']
     assert phase in ['train', 'test']
     key = f'{setting}/{phase}'
 
     if key not in metadata:
-        metadata[key] = json.load(open(f'anno/static/metadata/{key}.json', 'r'))
+        metadata[key] = json.load(open(f'static/metadata/{key}.json', 'r'))
 
     qa_id = np.clip(qa_id, 0, len(metadata[key]))
     qa = metadata[key][qa_id].copy()
