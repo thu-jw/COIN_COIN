@@ -228,14 +228,14 @@ input[type=number] {
 
           <div class="row {% if start_step in cut_points %}border-between{% endif %}" id="images">
           <div class="col-sm-{% if second_img %}6{% else %}12{% endif %}" align="center">
-            {% with 'images/data/'|add:first_img as first_static%}
+            {% with 'data/'|add:first_img as first_static%}
               <img src="{% static first_static %}" class="img-fluid">
             {% endwith %}
             <h5 class="img-caption">{{ start_step}}: {{ first_name }}</h5>
           </div>
           {% if second_img %}
             <div class="col-sm-6" align="center">
-              {% with 'images/data/'|add:second_img as second_static%}
+              {% with 'data/'|add:second_img as second_static%}
                 <img src="{% static second_static %}" class="img-fluid">
               {% endwith %}
               <h5 class="img-caption">{{ start_step|add:"1"}}: {{ second_name }}</h5>

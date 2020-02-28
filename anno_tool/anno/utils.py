@@ -3,7 +3,7 @@ import pandas as pd
 from IPython import embed
 
 def load_action_dict():
-    df = pd.read_excel('anno/static/taxonomy.xlsx', sheet_name='target_action_mapping')
+    df = pd.read_excel('static/taxonomy.xlsx', sheet_name='target_action_mapping')
     df = df.iloc[:, 2:]
     action_dict = df.set_index('Action Id').T.to_dict('list')
     for k, v in action_dict.items():

@@ -1,0 +1,49 @@
+{% extends "registration/base.html" %}
+{% load myfilters %}
+
+{% block title %}
+COIN COIN Sign in
+{% endblock %}
+
+{% block misc %}
+<style type="text/css" media="screen">
+
+.form-group {
+	margin-left: 35%;
+	margin-right: 35%;
+}
+
+</style>
+{% endblock %}
+
+{% block content %}
+
+{% if form.errors %}
+<p>Your username and password didn't match. Please try again.</p>
+{% endif %}
+
+{% if next %}
+    {% if user.is_authenticated %}
+    <p>Your account doesn't have access to this page. To proceed,
+    please login with an account that has access.</p>
+    {% else %}
+    <p>Please login to see this page.</p>
+    {% endif %}
+{% endif %}
+
+<form method="post" action="{% url 'login' %}">
+{% csrf_token %}
+<h5>COIN <sup>2</sup> Sign in</h5>
+<div class="form-group">
+<input type="text" class="form-control my-2" id="username" name="username" placeholder="username">
+<input type="password" class="form-control my-2" id="password" name="password" placeholder="password">
+<input type="submit" value="login" class="btn btn-primary my-2 px-4">
+<input type="hidden" name="next" value="/humantest/start">
+</div>
+</form>
+
+{# Assumes you setup the password_reset view in your URLconf #}
+<p><a href="{% url 'password_reset' %}">Lost password?</a></p>
+<p>Don't have an account? <a href="{% url 'signup' %}">Sign up</a></p>
+
+{% endblock %}
