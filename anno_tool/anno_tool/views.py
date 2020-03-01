@@ -5,7 +5,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import render, redirect
 
 def index(request):
-    return redirect('anno')
+    return redirect('humantest/')
 
 def signup(request):
     if request.method == 'POST':
