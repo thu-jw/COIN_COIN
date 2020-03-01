@@ -6,8 +6,9 @@ from . import views
 app_name = 'humantest'
 
 urlpatterns = [
-    path('', views.index, name='index'),
+    path('', views.start, name='index'),
     path('<str:setting>/<str:phase>/start', views.start, name='start'),
+    path('stat/', views.stat, name='stat'),
     path('start/', views.start, name='start'),
     path('<int:qa_id>', views.qa, name='qa'),
     path('<int:qa_id>/choose', views.choose, name='choose'),

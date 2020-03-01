@@ -2,10 +2,36 @@
 {% load static %}
 
 {% block title %}
-  COIN COIN Annotation Tool
+  COIN COIN Humantest
 {% endblock %}
 
 {% block misc %}
+
+<script>
+$(window).keydown(function(e) {
+  switch (e.keyCode) {
+    case 13: // enter
+		  $('#submit').click();
+      return false;
+    case 65:
+		  $('#c0').click();
+      return false;
+    case 66:
+		  $('#c1').click();
+      return false;
+    case 67:
+		  $('#c2').click();
+      return false;
+    case 68:
+		  $('#c3').click();
+      return false;
+    default:
+      break;
+      return false;
+  }
+});
+</script>
+
 <style type="text/css" media="screen">
 .question {
 	width: 30%;
@@ -25,7 +51,7 @@
 {% endblock %}
 
 {% block navtab %}
-  "dataset"
+  "qa"
 {% endblock %}
 
 {% block content %}
@@ -71,7 +97,7 @@
 		  {% for c in choices %}
 			  <div class="form-check">
 				  <label class="form-check-label">
-					  <input type="radio" class="form-check-input" name="answer" value={{ forloop.counter0 }}>
+					  <input type="radio" class="form-check-input" name="answer" value={{ forloop.counter0 }} id="c{{ forloop.counter0 }}">
 					  {% for s in c|get_item:"gifs" %}
 						  {% with 'data/'|add:s as static_s%}
 							  <img src="{% static static_s %}" class="img-fluid choices mx-2 my-1">
@@ -82,7 +108,7 @@
 
 		  {% endfor %}
 
-	  <button class="btn btn-success btn-edit" type="submit" name="submit">Submit</button>
+	  <button class="btn btn-success btn-edit" type="submit" name="submit" id="submit">Submit</button>
 	  </div>
 
 	  </form>

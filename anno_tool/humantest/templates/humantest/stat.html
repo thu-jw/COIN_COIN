@@ -1,0 +1,40 @@
+{% extends "humantest/base.html" %}
+{% load static %}
+
+{% block title %}
+  COIN COIN Annotation Tool
+{% endblock %}
+
+{% block misc %}
+<style type="text/css" media="screen">
+#main {
+	margin-top: 80px;
+	padding-left: 5%;
+	padding-right: 5%;
+}
+</style>
+{% endblock %}
+
+{% block navtab %}
+  "stat"
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid bg-1" id="main">
+<table class="table">
+	<thead>
+		<tr><th>setting/phase</th><th>answered</th><th>correct</th><th>acc</th></tr>
+	</thead>
+	<tbody>
+	{% for key, value in correct %}
+    <tr>
+        <td> {{ key }} </td> 
+        <td> {{ num_answered|get_item:key }} </td>
+        <td> {{ value }} </td>
+        <td> {{ acc|get_item:key }} </td>
+    </tr>
+	</tbody>
+{% endfor %}
+</table>
+</div>
+{% endblock %}
