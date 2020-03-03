@@ -10,6 +10,7 @@ urlpatterns = [
     path('<str:setting>/<str:phase>/start', views.start, name='start'),
     path('stat/', views.stat, name='stat'),
     path('start/', views.start, name='start'),
+    path('help/', views.help, name='help'),
     path('<int:qa_id>', views.qa, name='qa'),
     path('<int:qa_id>/choose', views.choose, name='choose'),
 ]

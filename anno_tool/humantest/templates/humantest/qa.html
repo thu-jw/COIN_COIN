@@ -11,7 +11,13 @@
 $(window).keydown(function(e) {
   switch (e.keyCode) {
     case 13: // enter
-		  $('#submit').click();
+		  if ($("#pid").is(":focus")) {
+			  var new_pid = $("#pid").val();
+			  if ("{{id}}"!= new_pid)
+				  window.location.replace("/humantest/" + $("#pid").val());
+		  }
+		  else
+			  $('#submit').click();
       return false;
     case 65:
 		  $('#c0').click();
@@ -47,6 +53,50 @@ $(window).keydown(function(e) {
 	padding-left: 5%;
 	padding-right: 5%;
 }
+
+.btn-group {
+	margin-right: 5%;
+	padding: 5px;
+}
+
+#pid {
+  width: 80px;
+  text-align: center;
+}
+
+.fa-arrows {
+  color: #aaa;
+  height: 100%;
+  width: 1rem;
+}
+
+.fa-arrows:hover {
+  color: #222;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance:textfield;
+}
+
+/* Bootstrap Toggle v2.2.2 corrections for Bootsrtap 4*/
+.toggle-off {
+  box-shadow: inset 0 3px 5px rgba(0, 0, 0, .125);
+}
+.toggle.off {
+  border-color: rgba(0, 0, 0, .25);
+}
+
+.toggle-handle {
+  background-color: white;
+  border: thin rgba(0, 0, 0, .25) solid;
+}
 </style>
 {% endblock %}
 
@@ -57,17 +107,29 @@ $(window).keydown(function(e) {
 {% block content %}
   <div class="container-fluid bg-1" id="main">
 	  <div class="row">
-		  <div class="col-sm-2">
-			  <h5>Question {{ id }}:</h5>
+		  <div class="col-sm-3">
+			<h4>Problem id<br/>
+			  <div class="vid-group">
+				<a href="{% url 'humantest:qa' id|add:"-1"%}" id="prev_vid">
+				  <span class="fas fa-caret-left fa-arrows"></span>
+				</a>
+				<small>
+				  <input type="number" value="{{id}}" name="" id="pid" min="1" max="{{ num_problems }}"/>
+				</small>
+				<a href="{% url 'humantest:qa' id|add:"1"%}" id="next_vid">
+				  <span class="fas fa-caret-right fa-arrows"></span>
+				</a>
+			  </div>
+			</h4>
 		  </div>
-		 <div class="col-sm-5">
+		 <div class="col-sm-6">
 		  {% for q in question %}
 			  {% with 'data/'|add:q as static_q%}
 				  <img src="{% static static_q %}" class="img-fluid question">
 			  {% endwith %}
 		  {%endfor%}
 		</div>
-		<div class="col-sm-5">
+		<div class="col-sm-3">
 		  <div class="btn-group">
 			<button type="button" class="btn btn-info dropdown-toggle btn-edit disable" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 				{{setting}}
@@ -83,7 +145,7 @@ $(window).keydown(function(e) {
 				{{phase}}
 			</button>
 			  <div class="dropdown-menu">
-				<a class="dropdown-item" href="{% url "humantest:start" setting "train" %}">train</a>
+				<a class="dropdown-item disabled" href="{% url "humantest:start" setting "train" %}">train</a>
 				<a class="dropdown-item" href="{% url "humantest:start" setting "test" %}">test</a>
 			  </div>
 		  </div>

@@ -15,9 +15,12 @@ def index(request):
 NUM_QAS = len(QA.objects.all())
 NUM_FINISHED = 0
 
-SETTINGS = [i for i in os.listdir('../metadata/')]
+SETTINGS = ['short1', 'long6']
 print(SETTINGS)
 
+@login_required(login_url='/accounts/login/')
+def help(request):
+    return render(request, "humantest/help.html")
 
 @login_required(login_url='/accounts/login/')
 def start(request, setting='', phase='test'):
@@ -87,21 +90,36 @@ def choose(request, qa_id):
 @login_required(login_url='/accounts/login/')
 def stat(request):
     user = get_user(request)
-    qas = QA.objects.filter(answerers__contains=user.username)
+    # qas = QA.objects.filter(answerers__contains=user.username)
+    username = user.username
+    qas = QA.objects.exclude(answers='').exclude(answerers='tys')
 
     correct = {}
     num_answered = {}
+    all_correct = {}
+    all_num_answered = {}
+
     for qa in qas:
         key = f'{qa.setting}/{qa.phase}'
-        index = qa.answerers.split(',').index(user.username)
-        ans = int(qa.answers[index])
-        if key in num_answered:
-            num_answered[key] += 1
+        ans = int(qa.answers)
+        if key in all_num_answered:
+            all_num_answered[key] += 1
         else:
-            num_answered[key] = 1
-            correct[key] = 0
+            all_num_answered[key] = 1
+            all_correct[key] = 0
         if qa.correct_answer == ans:
-            correct[key] += 1
+            all_correct[key] += 1
+
+        if username in qa.answerers:
+            index = qa.answerers.split(',').index(username)
+            ans = int(qa.answers[index])
+            if key in num_answered:
+                num_answered[key] += 1
+            else:
+                num_answered[key] = 1
+                correct[key] = 0
+            if qa.correct_answer == ans:
+                correct[key] += 1
 
     acc = {
         k: '{:.2f}%'.format(correct[k] * 100 / num_answered[k])
@@ -109,10 +127,19 @@ def stat(request):
         for k in num_answered.keys()
     }
 
+    all_acc = {
+        k: '{:.2f}%'.format(all_correct[k] * 100 / all_num_answered[k])
+        if all_num_answered[k] > 0 else '/'
+        for k in all_num_answered.keys()
+    }
+
     context = {
         'correct': sorted(correct.items()),
         'num_answered': num_answered,
         'acc': acc,
+        'all_correct': sorted(all_correct.items()),
+        'all_num_answered': all_num_answered,
+        'all_acc': all_acc,
     }
     return render(request, "humantest/stat.html", context)
 

@@ -1,0 +1,59 @@
+{% extends "humantest/base.html" %}
+{% load static %}
+{% block title %}
+COIN COIN Humantest
+{% endblock %}
+
+{% block misc %}
+<style>
+  .container-fluid#main {
+  margin-top: 10%;
+  padding-left:20%;
+  padding-right:20%;
+  line-height: 30px;
+}
+
+.light{
+    -webkit-text-stroke: 1.5px white;
+}
+
+</style>
+{% endblock %}
+
+{% block navtab %}
+	"help"
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid bg-1 text-center" id="main">
+
+<h2 class="m-4"> COIN <sup>2</sup> Humantest </h2>
+
+<h2 class="m-4"> 任务 </h2>
+<ul class="text-left">
+	<li>问题中的两张图片分别表示一个完整任务的开始和结束</li>
+	<li>选项中的视频分别为中间可能出现的动作</li>
+	<li>请选出你认为最合理的选项</li>
+</ul>
+
+
+<h2 class="m-4"> 快捷键 </h2>
+<p class="text-justify">
+可以使用键盘快捷键加速标注：
+<table class="table">
+	<thead>
+	<tr><th>键盘</th><th>操作</th></tr>
+	</thead>
+	<tbody>
+	<tr><td>A</td><td>选中选项A</td></tr>
+	<tr><td>B</td><td>选中选项B</td></tr>
+	<tr><td>C</td><td>选中选项C</td></tr>
+	<tr><td>D</td><td>选中选项D</td></tr>
+	<tr><td>Enter</td><td>提交选项</td></tr>
+	</tbody>
+</table>
+</p>
+</div>
+{% endblock %}
+
