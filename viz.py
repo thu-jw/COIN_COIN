@@ -12,7 +12,7 @@ for setting in ['long6', 'short1']:
     for phase in ['train', 'test']:
         metadata[setting][phase] = json.load(open(f'./metadata/{setting}/{phase}.json'))
 
-# prepare data
+# prepare hist
 duration = {}
 
 for setting in metadata.keys():
@@ -27,7 +27,7 @@ for setting in metadata.keys():
                     anno = COIN['database'][vid]['annotation']
                     seg = anno[int(index)]['segment']
                     duration_list.append(seg[1] - seg[0])
-        duration[setting][phase] = duration_list
+        duration[setting][phase] = np.histogram(duration_list, bins=np.arange(0, 300))
 print('duration loaded')
 
 
@@ -40,8 +40,10 @@ for setting in duration.keys():
     bar_list = []
     width = 0.2 if 'long' in setting else -0.2
     for phase, value in duration[setting].items():
-        print(phase, len(value))
-        bar_list.append(plt.bar(10, value, align='edge', width=width))
-
-plt.save('test.pdf')
+        hist, edges = value
+        x = (edges[1:] + edges[:-1]) / 2
+        print(len(x), len(hist))
+        assert len(x) == len(hist)
+        bar_list.append(plt.bar(x, hist, align='edge', width=width))
+plt.show()
 # vim: ts=4 sw=4 sts=4 expandtab
