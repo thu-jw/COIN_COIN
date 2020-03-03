@@ -14,6 +14,7 @@ for setting in ['long6', 'short1']:
 
 # prepare hist
 duration = {}
+bins = np.arange(0, 310, 10)
 
 for setting in metadata.keys():
     if setting not in duration:
@@ -27,7 +28,8 @@ for setting in metadata.keys():
                     anno = COIN['database'][vid]['annotation']
                     seg = anno[int(index)]['segment']
                     duration_list.append(seg[1] - seg[0])
-        duration[setting][phase] = np.histogram(duration_list, bins=np.arange(0, 300))
+        duration[setting][phase] = np.histogram(duration_list, bins=bins)
+        print(max(duration_list))
 print('duration loaded')
 
 
@@ -45,5 +47,6 @@ for setting in duration.keys():
         print(len(x), len(hist))
         assert len(x) == len(hist)
         bar_list.append(plt.bar(x, hist, align='edge', width=width))
-plt.show()
+
+plt.savefig('duration.pdf')
 # vim: ts=4 sw=4 sts=4 expandtab
